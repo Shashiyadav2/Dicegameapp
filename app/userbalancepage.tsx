@@ -6,7 +6,7 @@ import {
     FlatList,
     ListRenderItem,
     SafeAreaView,
-    StatusBar,
+    StyleSheet,
     Text,
     TouchableOpacity,
     View,

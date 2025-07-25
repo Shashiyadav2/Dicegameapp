@@ -7,8 +7,7 @@ import SplashScreen from "../src/components/SplashScreen";
 export default function HomeScreen() {
     const [currentScreen, setCurrentScreen] = useState("splash");
     const [onboardingStep, setOnboardingStep] = useState(0);
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [mobileNumber, setMobileNumber] = useState("");
 
     useEffect(() => {
         if (currentScreen === "splash") {
@@ -35,10 +34,8 @@ export default function HomeScreen() {
     if (currentScreen === "login") {
         return (
             <Login
-                email={email}
-                setEmail={setEmail}
-                password={password}
-                setPassword={setPassword}
+                mobileNumber={mobileNumber}
+                setMobileNumber={setMobileNumber}
                 setCurrentScreen={setCurrentScreen}
             />
         );
