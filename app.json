@@ -8,14 +8,19 @@
     "scheme": "dice",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "statusBarHidden": true,
+    "statusBarStyle": "light-content",
     "splash": {
       "image": "./assets/images/LOGO.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#ffffff",
+      "hideStatusBar": true
     },
     "ios": {
       "supportsTablet": true,
       "requireFullScreen": true,
+      "statusBarHidden": true,
+      "statusBarStyle": "light-content",
       "orientations": [
         "landscape-left",
         "landscape-right"
@@ -28,6 +33,13 @@
       },
       "edgeToEdgeEnabled": true,
       "screenOrientation": "landscape",
+      "statusBar": {
+        "hidden": true,
+        "style": "light-content"
+      },
+      "navigationBar": {
+        "visible": "immersive"
+      },
       "package": "com.guru121.dice"
     },
     "web": {

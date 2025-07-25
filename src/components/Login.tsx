@@ -1,11 +1,11 @@
 import { LinearGradient } from "expo-linear-gradient";
+import { StatusBar } from "expo-status-bar";
 import LottieView from "lottie-react-native";
 import React, { useEffect, useRef } from "react";
 import {
     Animated,
     KeyboardAvoidingView,
     Platform,
-    StatusBar,
     StyleSheet,
     Text,
     TextInput,
@@ -82,9 +82,7 @@ export default function Login({
                 style={[styles.container, { width, height }]}
             >
                 <StatusBar
-                    barStyle="light-content"
-                    translucent
-                    backgroundColor="transparent"
+                    hidden
                 />
 
                 <KeyboardAvoidingView

@@ -1,5 +1,6 @@
 import Icon from "@expo/vector-icons/MaterialIcons";
 import { LinearGradient } from "expo-linear-gradient";
+import { StatusBar } from "expo-status-bar";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
@@ -7,7 +8,6 @@ import {
     Image,
     SafeAreaView,
     ScrollView,
-    StatusBar,
     StyleSheet,
     Text,
     TextInput,
@@ -55,7 +55,7 @@ export default function UserProfile() {
     return (
         <OrientationLock>
             <SafeAreaView style={[styles.container, { width, height }]}>
-                <StatusBar barStyle="light-content" backgroundColor="#312e81" />
+                <StatusBar hidden />
                 <LinearGradient
                     colors={["#312e81", "#7c3aed"]}
                     style={styles.gradient}

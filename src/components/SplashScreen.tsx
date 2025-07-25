@@ -1,9 +1,9 @@
 import { LinearGradient } from "expo-linear-gradient";
+import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useRef } from "react";
 import {
     Animated,
     Image,
-    StatusBar,
     StyleSheet,
     Text,
     View,

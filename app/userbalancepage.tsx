@@ -1,4 +1,5 @@
 import { LinearGradient } from "expo-linear-gradient";
+import { StatusBar } from "expo-status-bar";
 import { useRouter } from "expo-router";
 import React from "react";
 import {
@@ -6,7 +7,6 @@ import {
     ListRenderItem,
     SafeAreaView,
     StatusBar,
-    StyleSheet,
     Text,
     TouchableOpacity,
     View,
@@ -90,7 +90,7 @@ export default function UserBalance() {
     return (
         <OrientationLock>
             <SafeAreaView style={[styles.container, { width, height }]}>
-                <StatusBar barStyle="light-content" backgroundColor="#312e81" />
+                <StatusBar hidden />
                 <LinearGradient
                     colors={["#312e81", "#7c3aed"]}
                     style={styles.gradient}

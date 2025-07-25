@@ -1,8 +1,8 @@
 import { LinearGradient } from "expo-linear-gradient";
+import { StatusBar } from "expo-status-bar";
 import LottieView from "lottie-react-native";
 import React from "react";
 import {
-    StatusBar,
     StyleSheet,
     Text,
     TouchableOpacity,
