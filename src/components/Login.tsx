@@ -26,7 +26,7 @@ export default function Login({
     setMobileNumber,
     setCurrentScreen,
 }: LoginProps) {
-    const { width, height, isTablet } = useResponsiveDimensions();
+    const { width, height, scale, fontScale, spacing, isTablet } = useResponsiveDimensions();
     const fadeAnim = useRef(new Animated.Value(0)).current;
     const slideAnim = useRef(new Animated.Value(50)).current;
     const scaleAnim = useRef(new Animated.Value(0.9)).current;
@@ -91,7 +91,7 @@ export default function Login({
                 >
                     <Animated.View
                         style={[
-                            styles.loginContainer,
+                            styles(scale, fontScale, spacing).loginContainer,
                             {
                                 opacity: fadeAnim,
                                 transform: [
@@ -102,13 +102,13 @@ export default function Login({
                             },
                         ]}
                     >
-                        <View style={[styles.leftPanel, { flex: 1 }]}>
+                        <View style={[styles(scale, fontScale, spacing).leftPanel, { flex: 1 }]}>
                             <View
                                 style={[
-                                    styles.animationContainer,
+                                    styles(scale, fontScale, spacing).animationContainer,
                                     {
-                                        width: isTablet ? 300 : 250,
-                                        height: isTablet ? 300 : 250,
+                                        width: Math.round(270 * scale),
+                                        height: Math.round(270 * scale),
                                     },
                                 ]}
                             >
@@ -116,57 +116,42 @@ export default function Login({
                                     source={require("../../assets/animation/login-animation.json")}
                                     autoPlay
                                     loop
-                                    style={styles.lottieAnimation}
+                                    style={styles(scale, fontScale, spacing).lottieAnimation}
                                 />
                             </View>
                             <Text
-                                style={[
-                                    styles.brandText,
-                                    { fontSize: isTablet ? 32 : 28 },
-                                ]}
+                                style={styles(scale, fontScale, spacing).brandText}
                             >
                                 Welcome
                             </Text>
                             <Text
-                                style={[
-                                    styles.brandSubtext,
-                                    { fontSize: isTablet ? 20 : 16 },
-                                ]}
+                                style={styles(scale, fontScale, spacing).brandSubtext}
                             >
                                 To ICW Gaming Platform
                             </Text>
                         </View>
 
-                        <View style={[styles.rightPanel, { flex: 1 }]}>
+                        <View style={[styles(scale, fontScale, spacing).rightPanel, { flex: 1 }]}>
                             <View
                                 style={[
-                                    styles.card,
-                                    { maxWidth: isTablet ? 600 : 480 },
+                                    styles(scale, fontScale, spacing).card,
+                                    { maxWidth: Math.round(520 * scale) },
                                 ]}
                             >
                                 <Text
-                                    style={[
-                                        styles.loginTitle,
-                                        { fontSize: isTablet ? 30 : 26 },
-                                    ]}
+                                    style={styles(scale, fontScale, spacing).loginTitle}
                                 >
                                     Welcome Back
                                 </Text>
                                 <Text
-                                    style={[
-                                        styles.loginSubtitle,
-                                        { fontSize: isTablet ? 20 : 16 },
-                                    ]}
+                                    style={styles(scale, fontScale, spacing).loginSubtitle}
                                 >
                                     Sign in to continue your journey
                                 </Text>
 
-                                <View style={styles.inputWrapper}>
+                                <View style={styles(scale, fontScale, spacing).inputWrapper}>
                                     <TextInput
-                                        style={[
-                                            styles.input,
-                                            { fontSize: isTablet ? 20 : 16 },
-                                        ]}
+                                        style={styles(scale, fontScale, spacing).input}
                                         placeholder="Mobile Number"
                                         placeholderTextColor="rgba(255, 255, 255, 0.6)"
                                         value={mobileNumber}
@@ -182,24 +167,17 @@ export default function Login({
                                     }}
                                 >
                                     <TouchableOpacity
-                                        style={styles.button}
+                                        style={styles(scale, fontScale, spacing).button}
                                         onPress={handleButtonPress}
                                     >
                                         <LinearGradient
                                             colors={["#ff6b6b", "#ff8e53"]}
                                             start={{ x: 0, y: 0 }}
                                             end={{ x: 1, y: 0 }}
-                                            style={styles.buttonGradient}
+                                            style={styles(scale, fontScale, spacing).buttonGradient}
                                         >
                                             <Text
-                                                style={[
-                                                    styles.buttonText,
-                                                    {
-                                                        fontSize: isTablet
-                                                            ? 22
-                                                            : 18,
-                                                    },
-                                                ]}
+                                                style={styles(scale, fontScale, spacing).buttonText}
                                             >
                                                 Send OTP
                                             </Text>
@@ -215,23 +193,23 @@ export default function Login({
     );
 }
 
-const styles = StyleSheet.create({
+const styles = (scale: number, fontScale: number, spacing: any) => StyleSheet.create({
     container: { flex: 1 },
     loginContainer: {
         flex: 1,
-        paddingTop: Platform.OS === "ios" ? 50 : StatusBar.currentHeight || 20,
+        paddingTop: Platform.OS === "ios" ? Math.round(50 * scale) : Math.round((StatusBar.currentHeight || 20) * scale),
     },
     leftPanel: {
         alignItems: "center",
         justifyContent: "center",
-        padding: 20,
+        padding: spacing.lg,
     },
     rightPanel: {
-        paddingHorizontal: 20,
+        paddingHorizontal: spacing.lg,
         justifyContent: "center",
     },
     animationContainer: {
-        marginBottom: 20,
+        marginBottom: spacing.lg,
     },
     lottieAnimation: {
         width: "100%",
@@ -239,60 +217,59 @@ const styles = StyleSheet.create({
     },
     brandText: {
         color: "white",
-        fontSize: 28,
+        fontSize: Math.round(30 * fontScale),
         fontWeight: "bold",
         textAlign: "center",
     },
     brandSubtext: {
         color: "rgba(255, 255, 255, 0.8)",
-        fontSize: 16,
+        fontSize: Math.round(18 * fontScale),
         textAlign: "center",
-        marginTop: 8,
+        marginTop: spacing.sm,
     },
     card: {
         backgroundColor: "rgba(255, 255, 255, 0.15)",
-        borderRadius: 24,
-        padding: 32,
+        borderRadius: Math.round(24 * scale),
+        padding: spacing.xl,
         width: "100%",
-        maxWidth: 480,
         alignSelf: "center",
     },
     loginTitle: {
         color: "white",
-        fontSize: 26,
+        fontSize: Math.round(28 * fontScale),
         fontWeight: "bold",
         textAlign: "center",
-        marginBottom: 8,
+        marginBottom: spacing.sm,
     },
     loginSubtitle: {
         color: "rgba(255, 255, 255, 0.8)",
-        fontSize: 16,
+        fontSize: Math.round(18 * fontScale),
         textAlign: "center",
-        marginBottom: 24,
+        marginBottom: spacing.lg,
     },
     inputWrapper: {
         backgroundColor: "rgba(255, 255, 255, 0.1)",
-        borderRadius: 12,
-        paddingHorizontal: 16,
-        marginBottom: 16,
+        borderRadius: Math.round(12 * scale),
+        paddingHorizontal: spacing.md,
+        marginBottom: spacing.md,
     },
     input: {
         color: "white",
-        fontSize: 16,
-        paddingVertical: 14,
+        fontSize: Math.round(18 * fontScale),
+        paddingVertical: spacing.md,
     },
     button: {
-        borderRadius: 16,
+        borderRadius: Math.round(16 * scale),
         overflow: "hidden",
-        marginBottom: 16,
+        marginBottom: spacing.md,
     },
     buttonGradient: {
-        paddingVertical: 16,
+        paddingVertical: spacing.md,
         alignItems: "center",
     },
     buttonText: {
         color: "white",
-        fontSize: 18,
+        fontSize: Math.round(20 * fontScale),
         fontWeight: "600",
     },
 });

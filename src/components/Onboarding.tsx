@@ -37,7 +37,7 @@ export default function Onboarding({
     setOnboardingStep,
     setCurrentScreen,
 }: OnboardingProps) {
-    const { width, height, isTablet } = useResponsiveDimensions();
+    const { width, height, scale, fontScale, spacing, isTablet } = useResponsiveDimensions();
     const currentData = onboardingData[onboardingStep];
 
     const isSecondStep = onboardingStep === 1;
@@ -60,24 +60,24 @@ export default function Onboarding({
                 colors={["#667eea", "#764ba2", "#f093fb"]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
-                style={[styles.container, { width, height }]}
+                style={[styles(scale, fontScale, spacing).container, { width, height }]}
             >
                 <StatusBar hidden />
-                <View style={styles.onboardingContainer}>
+                <View style={styles(scale, fontScale, spacing).onboardingContainer}>
                     <TouchableOpacity
-                        style={styles.skipButton}
+                        style={styles(scale, fontScale, spacing).skipButton}
                         onPress={skipOnboarding}
                     >
-                        <Text style={[styles.skipText, { fontSize: isTablet ? 20 : 16 }]}>Skip</Text>
+                        <Text style={styles(scale, fontScale, spacing).skipText}>Skip</Text>
                     </TouchableOpacity>
 
-                    <View style={styles.onboardingContent}>
+                    <View style={styles(scale, fontScale, spacing).onboardingContent}>
                         <View
                             style={[
-                                styles.lottieWrapper,
+                                styles(scale, fontScale, spacing).lottieWrapper,
                                 {
-                                    width: isSecondStep ? (isTablet ? 320 : 260) : (isTablet ? 220 : 180),
-                                    height: isSecondStep ? (isTablet ? 320 : 260) : (isTablet ? 220 : 180),
+                                    width: Math.round((isSecondStep ? 290 : 200) * scale),
+                                    height: Math.round((isSecondStep ? 290 : 200) * scale),
                                 },
                             ]}
                         >
@@ -85,50 +85,50 @@ export default function Onboarding({
                                 source={currentData.lottie}
                                 autoPlay
                                 loop
-                                style={styles.lottieAnimation}
+                                style={styles(scale, fontScale, spacing).lottieAnimation}
                             />
                         </View>
                     </View>
 
-                    <View style={styles.onboardingFooter}>
-                        <View style={styles.dotsContainer}>
+                    <View style={styles(scale, fontScale, spacing).onboardingFooter}>
+                        <View style={styles(scale, fontScale, spacing).dotsContainer}>
                             {onboardingData.map((_, index) => (
                                 <View
                                     key={index}
                                     style={[
-                                        styles.dot,
+                                        styles(scale, fontScale, spacing).dot,
                                         {
-                                            width: isTablet ? 16 : 12,
-                                            height: isTablet ? 16 : 12,
-                                            borderRadius: isTablet ? 8 : 6,
+                                            width: Math.round(14 * scale),
+                                            height: Math.round(14 * scale),
+                                            borderRadius: Math.round(7 * scale),
                                         },
                                         index === onboardingStep
-                                            ? styles.activeDot
-                                            : styles.inactiveDot,
+                                            ? styles(scale, fontScale, spacing).activeDot
+                                            : styles(scale, fontScale, spacing).inactiveDot,
                                     ]}
                                 />
                             ))}
                         </View>
-                        <View style={styles.textAndButtonBlock}>
-                            <View style={styles.textBlock}>
-                                <Text style={[styles.onboardingTitle, { fontSize: isTablet ? 38 : 32 }]}>
+                        <View style={styles(scale, fontScale, spacing).textAndButtonBlock}>
+                            <View style={styles(scale, fontScale, spacing).textBlock}>
+                                <Text style={styles(scale, fontScale, spacing).onboardingTitle}>
                                     {currentData.title}
                                 </Text>
-                                <Text style={[styles.onboardingDescription, { fontSize: isTablet ? 22 : 18 }]}>
+                                <Text style={styles(scale, fontScale, spacing).onboardingDescription}>
                                     {currentData.description}
                                 </Text>
                             </View>
                             <TouchableOpacity
-                                style={styles.button}
+                                style={styles(scale, fontScale, spacing).button}
                                 onPress={nextOnboarding}
                             >
                                 <LinearGradient
                                     colors={["#ff6b6b", "#ff8e53"]}
                                     start={{ x: 0, y: 0 }}
                                     end={{ x: 1, y: 0 }}
-                                    style={styles.buttonGradient}
+                                    style={styles(scale, fontScale, spacing).buttonGradient}
                                 >
-                                    <Text style={[styles.buttonText, { fontSize: isTablet ? 20 : 16 }]}>
+                                    <Text style={styles(scale, fontScale, spacing).buttonText}>
                                         {onboardingStep < onboardingData.length - 1
                                             ? "Next"
                                             : "Get Started"}
@@ -143,31 +143,32 @@ export default function Onboarding({
     );
 }
 
-const styles = StyleSheet.create({
+const styles = (scale: number, fontScale: number, spacing: any) => StyleSheet.create({
     container: {
         flex: 1,
     },
     onboardingContainer: {
         flex: 1,
-        paddingHorizontal: 20,
-        paddingTop: 50,
+        paddingHorizontal: spacing.lg,
+        paddingTop: Math.round(50 * scale),
         justifyContent: "space-between",
     },
     skipButton: {
         alignSelf: "flex-end",
-        padding: 10,
+        padding: spacing.sm,
     },
     skipText: {
         color: "rgba(255, 255, 255, 0.8)",
+        fontSize: Math.round(18 * fontScale),
     },
     onboardingContent: {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        paddingHorizontal: 20,
+        paddingHorizontal: spacing.lg,
     },
     lottieWrapper: {
-        marginBottom: 10,
+        marginBottom: spacing.sm,
         alignItems: "center",
         justifyContent: "center",
     },
@@ -176,13 +177,11 @@ const styles = StyleSheet.create({
         height: "100%",
     },
     textAndButtonBlock: {
-        marginTop: 0,
-        marginBottom: 0,
         alignItems: "center",
         width: "100%",
     },
     textBlock: {
-        marginBottom: 24,
+        marginBottom: spacing.lg,
         alignItems: "center",
         width: "100%",
     },
@@ -190,29 +189,30 @@ const styles = StyleSheet.create({
         color: "white",
         fontWeight: "bold",
         textAlign: "center",
-        marginBottom: 10,
-        paddingHorizontal: 8,
+        marginBottom: spacing.sm,
+        paddingHorizontal: spacing.sm,
         width: "100%",
+        fontSize: Math.round(35 * fontScale),
     },
     onboardingDescription: {
         color: "rgba(255, 255, 255, 0.85)",
         textAlign: "center",
-        lineHeight: 26,
-        maxWidth: 420,
-        paddingHorizontal: 8,
+        lineHeight: Math.round(26 * fontScale),
+        maxWidth: Math.round(420 * scale),
+        paddingHorizontal: spacing.sm,
         width: "100%",
+        fontSize: Math.round(20 * fontScale),
     },
     onboardingFooter: {
         alignItems: "center",
-        marginBottom: 40,
+        marginBottom: Math.round(40 * scale),
     },
     dotsContainer: {
         flexDirection: "row",
-        marginTop: 90,
-        marginBottom: 0,
+        marginTop: Math.round(90 * scale),
     },
     dot: {
-        marginHorizontal: 6,
+        marginHorizontal: spacing.xs,
     },
     activeDot: {
         backgroundColor: "white",
@@ -221,17 +221,18 @@ const styles = StyleSheet.create({
         backgroundColor: "rgba(255, 255, 255, 0.3)",
     },
     button: {
-        borderRadius: 16,
+        borderRadius: Math.round(16 * scale),
         overflow: "hidden",
     },
     buttonGradient: {
-        paddingVertical: 14,
-        paddingHorizontal: 40,
+        paddingVertical: spacing.md,
+        paddingHorizontal: Math.round(40 * scale),
         alignItems: "center",
         justifyContent: "center",
     },
     buttonText: {
         color: "white",
         fontWeight: "600",
+        fontSize: Math.round(18 * fontScale),
     },
 });

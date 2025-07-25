@@ -29,8 +29,6 @@ import {
     TwoRupee,
 } from "../../assets/AssetManager";
 import { useResponsiveDimensions } from "../hooks/useResponsiveDimensions";
-import { globalStyles } from "../styles/globalStyles";
-import { responsiveStyles } from "../styles/responsive";
 import OrientationLock from "./common/OrientationLock";
 
 // Type definitions
@@ -88,7 +86,7 @@ const diceNumbers: { number: number; image: any }[] = [
 
 export default function CityBettingGame() {
     const router = useRouter();
-    const { width, height, isTablet } = useResponsiveDimensions();
+    const { width, height, scale, fontScale, spacing, isTablet, isSmallScreen } = useResponsiveDimensions();
     const [selectedAmount, setSelectedAmount] = useState<BetAmount | null>(
         null
     );
@@ -262,80 +260,110 @@ export default function CityBettingGame() {
 
     // Calculate responsive dimensions
     const getAmountButtonSize = () => {
-        if (isTablet) {
-            return { width: 80, height: 80 };
+        if (isSmallScreen) {
+            return { width: Math.round(55 * scale), height: Math.round(55 * scale) };
+        } else if (isTablet) {
+            return { width: Math.round(75 * scale), height: Math.round(75 * scale) };
+        } else {
+            return { width: Math.round(85 * scale), height: Math.round(85 * scale) };
         }
-        return { width: 65, height: 65 };
     };
 
     const getAmountImageSize = () => {
-        if (isTablet) {
-            return { width: 60, height: 60 };
+        if (isSmallScreen) {
+            return { width: Math.round(40 * scale), height: Math.round(40 * scale) };
+        } else if (isTablet) {
+            return { width: Math.round(55 * scale), height: Math.round(55 * scale) };
+        } else {
+            return { width: Math.round(65 * scale), height: Math.round(65 * scale) };
         }
-        return { width: 45, height: 45 };
+    };
+
+    const getCityImageSize = () => {
+        return {
+            width: Math.round(80 * scale),
+            height: Math.round(55 * scale),
+        };
+    };
+
+    const getDiceImageSize = () => {
+        return {
+            width: Math.round(70 * scale),
+            height: Math.round(70 * scale),
+        };
+    };
+
+    const getSidebarWidth = () => {
+        if (isSmallScreen) {
+            return Math.round(140 * scale);
+        } else if (isTablet) {
+            return Math.round(180 * scale);
+        } else {
+            return Math.round(200 * scale);
+        }
     };
 
     return (
         <OrientationLock>
             <LinearGradient
-                colors={globalStyles.gradientColors as [string, string]}
-                style={[styles.container, { width, height }]}
+                colors={["#4c51bf", "#6b46c1"]}
+                style={[styles(scale, fontScale, spacing).container, { width, height }]}
             >
                 {/* Sidebar */}
-                <View style={[responsiveStyles.sidebar, styles.sidebar]}>
-                    <View style={styles.sidebarTop}>
+                <View style={[styles(scale, fontScale, spacing).sidebar, { width: getSidebarWidth() }]}>
+                    <View style={styles(scale, fontScale, spacing).sidebarTop}>
                         <Image
                             source={LOGO}
                             style={[
-                                styles.logo,
+                                styles(scale, fontScale, spacing).logo,
                                 {
-                                    width: isTablet ? 120 : 100,
-                                    height: isTablet ? 120 : 100,
+                                    width: Math.round(100 * scale),
+                                    height: Math.round(100 * scale),
                                 },
                             ]}
                             resizeMode="contain"
                         />
                         <Text
-                            style={[responsiveStyles.subtitle, styles.userName]}
+                            style={styles(scale, fontScale, spacing).userName}
                         >
                             {userName}
                         </Text>
                         <Text
-                            style={[responsiveStyles.body, styles.balanceText]}
+                            style={styles(scale, fontScale, spacing).balanceText}
                         >
                             {isFreeTrial ? "Trial " : ""}Balance: ₹
                             {currentBalance}
                         </Text>
                     </View>
 
-                    <View style={styles.sidebarBottom}>
+                    <View style={styles(scale, fontScale, spacing).sidebarBottom}>
                         <Link href="/userprofilepage" asChild>
-                            <TouchableOpacity style={styles.profileBtn}>
-                                <Text style={styles.profileText}>Profile</Text>
+                            <TouchableOpacity style={styles(scale, fontScale, spacing).profileBtn}>
+                                <Text style={styles(scale, fontScale, spacing).profileText}>Profile</Text>
                             </TouchableOpacity>
                         </Link>
                         <Link href="/userbalancepage" asChild>
-                            <TouchableOpacity style={styles.walletBtn}>
-                                <Text style={styles.walletBtnText}>Wallet</Text>
+                            <TouchableOpacity style={styles(scale, fontScale, spacing).walletBtn}>
+                                <Text style={styles(scale, fontScale, spacing).walletBtnText}>Wallet</Text>
                             </TouchableOpacity>
                         </Link>
                         <TouchableOpacity
                             style={[
-                                styles.trialBtn,
-                                isFreeTrial && styles.trialBtnActive,
+                                styles(scale, fontScale, spacing).trialBtn,
+                                isFreeTrial && styles(scale, fontScale, spacing).trialBtnActive,
                             ]}
                             onPress={toggleTrialMode}
                         >
-                            <Text style={styles.trialBtnText}>
+                            <Text style={styles(scale, fontScale, spacing).trialBtnText}>
                                 {isFreeTrial ? "Exit Trial" : "Start Trial"}
                             </Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={[
-                                styles.rollBtn,
-                                isRolling && styles.rollBtnDisabled,
+                                styles(scale, fontScale, spacing).rollBtn,
+                                isRolling && styles(scale, fontScale, spacing).rollBtnDisabled,
                                 !isSelectionComplete() &&
-                                    styles.rollBtnDisabled,
+                                    styles(scale, fontScale, spacing).rollBtnDisabled,
                             ]}
                             onPress={() => {
                                 handleRoll();
@@ -343,7 +371,7 @@ export default function CityBettingGame() {
                             }}
                             disabled={isRolling || !isSelectionComplete()}
                         >
-                            <Text style={styles.rollText}>
+                            <Text style={styles(scale, fontScale, spacing).rollText}>
                                 {isRolling ? "Rolling..." : "Place Bet"}
                             </Text>
                         </TouchableOpacity>
@@ -351,24 +379,21 @@ export default function CityBettingGame() {
                 </View>
 
                 {/* Main Content - Three Sections */}
-                <View style={[styles.mainContent, { flex: 1 }]}>
+                <View style={[styles(scale, fontScale, spacing).mainContent, { flex: 1 }]}>
                     {/* Amount Selection - 2x2 Grid with all images */}
                     <LinearGradient
                         colors={["#f43f5eCC", "#e11d48CC"]}
-                        style={[responsiveStyles.gameSection, styles.section]}
+                        style={styles(scale, fontScale, spacing).section}
                     >
                         <Text
-                            style={[
-                                responsiveStyles.subtitle,
-                                styles.sectionTitle,
-                            ]}
+                            style={styles(scale, fontScale, spacing).sectionTitle}
                         >
                             Select Amount {selectedAmount && "✓"}
                         </Text>
-                        <View style={styles.amountGridContainer}>
+                        <View style={styles(scale, fontScale, spacing).amountGridContainer}>
                             {/* Arrange all 7 images in a 2x2 grid (2 rows, 4 columns; last row has 3 images + 1 empty slot) */}
                             {[0, 1].map((rowIdx) => (
-                                <View key={rowIdx} style={styles.amountGrid2x2}>
+                                <View key={rowIdx} style={styles(scale, fontScale, spacing).amountGrid2x2}>
                                     {Array.from({ length: 4 }).map(
                                         (_, colIdx) => {
                                             const idx = rowIdx * 4 + colIdx;
@@ -378,11 +403,11 @@ export default function CityBettingGame() {
                                                     <TouchableOpacity
                                                         key={amt.value}
                                                         style={[
-                                                            styles.amountBtn2x2,
+                                                            styles(scale, fontScale, spacing).amountBtn2x2,
                                                             getAmountButtonSize(),
                                                             selectedAmount?.value ===
                                                                 amt.value &&
-                                                                responsiveStyles.selectedItem,
+                                                                styles(scale, fontScale, spacing).selectedItem,
                                                         ]}
                                                         onPress={() =>
                                                             handleSelection(
@@ -395,7 +420,7 @@ export default function CityBettingGame() {
                                                         <Image
                                                             source={amt.image}
                                                             style={[
-                                                                styles.amountImage2x2,
+                                                                styles(scale, fontScale, spacing).amountImage2x2,
                                                                 getAmountImageSize(),
                                                             ]}
                                                             resizeMode="contain"
@@ -408,7 +433,7 @@ export default function CityBettingGame() {
                                                     <View
                                                         key={`empty-${rowIdx}-${colIdx}`}
                                                         style={[
-                                                            styles.amountBtn2x2,
+                                                            styles(scale, fontScale, spacing).amountBtn2x2,
                                                             getAmountButtonSize(),
                                                             { opacity: 0 },
                                                         ]}
@@ -425,25 +450,21 @@ export default function CityBettingGame() {
                     {/* City Selection */}
                     <LinearGradient
                         colors={["#10b981CC", "#059669CC"]}
-                        style={[responsiveStyles.gameSection, styles.section]}
+                        style={styles(scale, fontScale, spacing).section}
                     >
                         <Text
-                            style={[
-                                responsiveStyles.subtitle,
-                                styles.sectionTitle,
-                            ]}
+                            style={styles(scale, fontScale, spacing).sectionTitle}
                         >
                             Select City {selectedCity && "✓"}
                         </Text>
-                        <View style={[responsiveStyles.grid, styles.cityGrid]}>
+                        <View style={styles(scale, fontScale, spacing).cityGrid}>
                             {cities.map((city: City) => (
                                 <TouchableOpacity
                                     key={city.name}
                                     style={[
-                                        responsiveStyles.gameButton,
-                                        styles.cityBtn,
+                                        styles(scale, fontScale, spacing).cityBtn,
                                         selectedCity?.name === city.name &&
-                                            responsiveStyles.selectedItem,
+                                            styles(scale, fontScale, spacing).selectedItem,
                                     ]}
                                     onPress={() =>
                                         handleSelection("city", city)
@@ -453,11 +474,8 @@ export default function CityBettingGame() {
                                     <Image
                                         source={city.image}
                                         style={[
-                                            styles.cityImage,
-                                            {
-                                                width: isTablet ? 100 : 80,
-                                                height: isTablet ? 65 : 55,
-                                            },
+                                            styles(scale, fontScale, spacing).cityImage,
+                                            getCityImageSize(),
                                         ]}
                                         resizeMode="contain"
                                     />
@@ -469,26 +487,22 @@ export default function CityBettingGame() {
                     {/* Number Selection */}
                     <LinearGradient
                         colors={["#3b82f6CC", "#2563ebCC"]}
-                        style={[responsiveStyles.gameSection, styles.section]}
+                        style={styles(scale, fontScale, spacing).section}
                     >
                         <Text
-                            style={[
-                                responsiveStyles.subtitle,
-                                styles.sectionTitle,
-                            ]}
+                            style={styles(scale, fontScale, spacing).sectionTitle}
                         >
                             Select Number {selectedNumber && "✓"}
                         </Text>
-                        <View style={styles.numberGrid}>
+                        <View style={styles(scale, fontScale, spacing).numberGrid}>
                             {diceNumbers.map(
                                 (d: { number: number; image: any }) => (
                                     <TouchableOpacity
                                         key={d.number}
                                         style={[
-                                            responsiveStyles.gameButton,
-                                            styles.numberBtn,
+                                            styles(scale, fontScale, spacing).numberBtn,
                                             selectedNumber === d.number &&
-                                                responsiveStyles.selectedItem,
+                                                styles(scale, fontScale, spacing).selectedItem,
                                         ]}
                                         onPress={() =>
                                             handleSelection("number", d.number)
@@ -498,11 +512,8 @@ export default function CityBettingGame() {
                                         <Image
                                             source={d.image}
                                             style={[
-                                                styles.diceImage,
-                                                {
-                                                    width: isTablet ? 85 : 70,
-                                                    height: isTablet ? 85 : 70,
-                                                },
+                                                styles(scale, fontScale, spacing).diceImage,
+                                                getDiceImageSize(),
                                             ]}
                                             resizeMode="contain"
                                         />
@@ -517,15 +528,14 @@ export default function CityBettingGame() {
     );
 }
 
-const styles = StyleSheet.create({
+const styles = (scale: number, fontScale: number, spacing: any) => StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: "row",
     },
     sidebar: {
-        width: 160,
-        padding: 8,
-        paddingTop: Platform.OS === "ios" ? 48 : 28,
+        padding: spacing.sm,
+        paddingTop: Platform.OS === "ios" ? Math.round(48 * scale) : Math.round(28 * scale),
         alignItems: "center",
         backgroundColor: "rgba(0,0,0,0.2)",
         justifyContent: "space-between",
@@ -540,66 +550,64 @@ const styles = StyleSheet.create({
         gap: 8,
     },
     logo: {
-        width: 100,
-        height: 100,
-        marginBottom: 10,
+        marginBottom: spacing.sm,
     },
     userName: {
         color: "#fff",
         fontWeight: "700",
-        fontSize: 16,
-        marginBottom: 4,
+        fontSize: Math.round(16 * fontScale),
+        marginBottom: spacing.xs,
         textAlign: "center",
     },
     balanceText: {
         color: "#fff",
         fontWeight: "700",
-        fontSize: 14,
-        marginBottom: 15,
+        fontSize: Math.round(14 * fontScale),
+        marginBottom: spacing.md,
         textAlign: "center",
     },
     profileBtn: {
         backgroundColor: "rgba(255,255,255,0.1)",
-        padding: 10,
-        borderRadius: 8,
+        padding: spacing.sm,
+        borderRadius: Math.round(8 * scale),
         width: "100%",
         alignItems: "center",
     },
     profileText: {
         color: "#fff",
         fontWeight: "600",
-        fontSize: 14,
+        fontSize: Math.round(14 * fontScale),
     },
     walletBtn: {
         backgroundColor: "#805ad5",
-        padding: 10,
-        borderRadius: 8,
+        padding: spacing.sm,
+        borderRadius: Math.round(8 * scale),
         alignItems: "center",
         width: "100%",
     },
     walletBtnText: {
         color: "#fff",
         fontWeight: "700",
-        fontSize: 14,
+        fontSize: Math.round(14 * fontScale),
     },
     mainContent: {
         flex: 1,
         flexDirection: "row",
-        padding: 10,
-        paddingTop: Platform.OS === "ios" ? 50 : 30,
-        gap: 10,
+        padding: spacing.sm,
+        paddingTop: Platform.OS === "ios" ? Math.round(50 * scale) : Math.round(30 * scale),
+        gap: spacing.sm,
     },
     section: {
         flex: 1,
-        borderRadius: 12,
-        padding: 12,
+        borderRadius: Math.round(12 * scale),
+        padding: spacing.sm,
         alignItems: "center",
     },
     sectionTitle: {
         color: "#fff",
         fontWeight: "700",
-        fontSize: 14,
-        marginBottom: 12,
+        fontSize: Math.round(14 * fontScale),
+        marginBottom: spacing.sm,
         textAlign: "center",
     },
     // New 2x2 grid styles for amount selection
@@ -607,7 +615,7 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        gap: 8,
+        gap: spacing.sm,
         flex: 1,
     },
     amountGrid2x2: {
@@ -615,12 +623,12 @@ const styles = StyleSheet.create({
         flexWrap: "wrap",
         justifyContent: "center",
         alignItems: "center",
-        gap: 6,
-        maxWidth: 180,
+        gap: spacing.xs,
+        maxWidth: Math.round(180 * scale),
     },
     amountBtn2x2: {
         backgroundColor: "rgba(255,255,255,0.1)",
-        borderRadius: 8,
+        borderRadius: Math.round(8 * scale),
         alignItems: "center",
         justifyContent: "center",
         borderWidth: 2,
@@ -635,48 +643,42 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         flex: 1,
-        gap: 24,
+        gap: spacing.lg,
     },
     cityBtn: {
-        width: 100,
-        height: 50,
+        width: Math.round(100 * scale),
+        height: Math.round(50 * scale),
         backgroundColor: "rgba(255,255,255,0.1)",
-        borderRadius: 8,
+        borderRadius: Math.round(8 * scale),
         alignItems: "center",
         justifyContent: "center",
         borderWidth: 2,
         borderColor: "transparent",
-        padding: 4,
+        padding: spacing.xs,
     },
-    cityImage: {
-        width: 80,
-        height: 55,
-    },
+    cityImage: {},
     numberGrid: {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
         flex: 1,
-        gap: 8,
+        gap: spacing.sm,
     },
     numberBtn: {
-        width: 75,
-        height: 75,
+        width: Math.round(75 * scale),
+        height: Math.round(75 * scale),
         backgroundColor: "transparent",
-        borderRadius: 8,
+        borderRadius: Math.round(8 * scale),
         alignItems: "center",
         justifyContent: "center",
         borderWidth: 2,
         borderColor: "transparent",
     },
-    diceImage: {
-        width: 70,
-        height: 70,
-    },
+    diceImage: {},
     trialBtn: {
         backgroundColor: "#38a169",
-        padding: 10,
-        borderRadius: 8,
+        padding: spacing.sm,
+        borderRadius: Math.round(8 * scale),
         alignItems: "center",
         width: "100%",
     },
@@ -686,12 +688,12 @@ const styles = StyleSheet.create({
     trialBtnText: {
         color: "#fff",
         fontWeight: "700",
-        fontSize: 14,
+        fontSize: Math.round(14 * fontScale),
     },
     rollBtn: {
         backgroundColor: "#e2951d",
-        padding: 12,
-        borderRadius: 10,
+        padding: spacing.sm,
+        borderRadius: Math.round(10 * scale),
         alignItems: "center",
         width: "100%",
     },
@@ -701,6 +703,10 @@ const styles = StyleSheet.create({
     rollText: {
         color: "#fff",
         fontWeight: "700",
-        fontSize: 14,
+        fontSize: Math.round(14 * fontScale),
+    },
+    selectedItem: {
+        borderColor: "#ffd700",
+        backgroundColor: "rgba(255,215,0,0.2)",
     },
 });

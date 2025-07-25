@@ -48,7 +48,7 @@ const transactionIcons: Record<
 };
 
 export default function UserBalance() {
-    const { width, height, isTablet } = useResponsiveDimensions();
+    const { width, height, scale, fontScale, spacing, isTablet, isSmallScreen } = useResponsiveDimensions();
     const router = useRouter();
     const displayedBalance = DUMMY_IS_FREE_TRIAL
         ? DUMMY_FREE_TRIAL_BALANCE
@@ -93,7 +93,7 @@ export default function UserBalance() {
                 <StatusBar hidden />
                 <LinearGradient
                     colors={["#312e81", "#7c3aed"]}
-                    style={styles.gradient}
+                    style={styles(scale, fontScale, spacing).gradient}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 1 }}
                 >
@@ -102,21 +102,16 @@ export default function UserBalance() {
                         renderItem={() => (
                             <View
                                 style={[
-                                    styles.content,
-                                    { maxWidth: isTablet ? 1100 : 900 },
+                                    styles(scale, fontScale, spacing).content,
+                                    { maxWidth: Math.round((isTablet ? 1100 : 900) * scale) },
                                 ]}
                             >
                                 {/* Left Section - Balance & Actions */}
-                                <View style={styles.leftSection}>
-                                    <View style={styles.header}>
+                                <View style={styles(scale, fontScale, spacing).leftSection}>
+                                    <View style={styles(scale, fontScale, spacing).header}>
                                         <Text
                                             style={[
-                                                styles.title,
-                                                {
-                                                    fontSize: isTablet
-                                                        ? 28
-                                                        : 24,
-                                                },
+                                                styles(scale, fontScale, spacing).title,
                                                 { flex: 1 },
                                             ]}
                                         >
@@ -127,69 +122,25 @@ export default function UserBalance() {
                                     {/* Balance Overview */}
                                     <View
                                         style={[
-                                            styles.balanceCard,
-                                            {
-                                                borderRadius: isTablet
-                                                    ? 20
-                                                    : 16,
-                                                padding: isTablet ? 32 : 24,
-                                                marginBottom: isTablet
-                                                    ? 32
-                                                    : 24,
-                                            },
+                                            styles(scale, fontScale, spacing).balanceCard,
                                         ]}
                                     >
                                         <Text
-                                            style={[
-                                                styles.balanceLabel,
-                                                {
-                                                    fontSize: isTablet
-                                                        ? 16
-                                                        : 12,
-                                                },
-                                            ]}
+                                            style={styles(scale, fontScale, spacing).balanceLabel}
                                         >
                                             Current Balance
                                         </Text>
                                         <Text
-                                            style={[
-                                                styles.balanceAmount,
-                                                {
-                                                    fontSize: isTablet
-                                                        ? 40
-                                                        : 32,
-                                                },
-                                            ]}
+                                            style={styles(scale, fontScale, spacing).balanceAmount}
                                         >
                                             ₹{displayedBalance.toLocaleString()}
                                         </Text>
                                         {isFreeTrial && (
                                             <View
-                                                style={[
-                                                    styles.freeTrialBadge,
-                                                    {
-                                                        borderRadius: isTablet
-                                                            ? 16
-                                                            : 12,
-                                                        paddingHorizontal:
-                                                            isTablet ? 16 : 12,
-                                                        paddingVertical:
-                                                            isTablet ? 6 : 4,
-                                                        marginTop: isTablet
-                                                            ? 12
-                                                            : 8,
-                                                    },
-                                                ]}
+                                                style={styles(scale, fontScale, spacing).freeTrialBadge}
                                             >
                                                 <Text
-                                                    style={[
-                                                        styles.freeTrialText,
-                                                        {
-                                                            fontSize: isTablet
-                                                                ? 12
-                                                                : 10,
-                                                        },
-                                                    ]}
+                                                    style={styles(scale, fontScale, spacing).freeTrialText}
                                                 >
                                                     Free Trial Balance
                                                 </Text>
@@ -199,73 +150,40 @@ export default function UserBalance() {
 
                                     {/* Action Buttons */}
                                     <View
-                                        style={[
-                                            styles.actionButtons,
-                                            { gap: isTablet ? 16 : 12 },
-                                        ]}
+                                        style={styles(scale, fontScale, spacing).actionButtons}
                                     >
                                         <TouchableOpacity
                                             style={[
-                                                styles.actionButton,
-                                                styles.addFundsButton,
-                                                {
-                                                    paddingVertical: isTablet
-                                                        ? 16
-                                                        : 12,
-                                                    borderRadius: isTablet
-                                                        ? 16
-                                                        : 12,
-                                                },
+                                                styles(scale, fontScale, spacing).actionButton,
+                                                styles(scale, fontScale, spacing).addFundsButton,
                                             ]}
                                             activeOpacity={0.8}
                                         >
                                             <Icon
                                                 name="add-circle"
-                                                size={isTablet ? 22 : 18}
+                                                size={Math.round((isTablet ? 22 : 18) * scale)}
                                                 color="#fff"
                                             />
                                             <Text
-                                                style={[
-                                                    styles.actionButtonText,
-                                                    {
-                                                        fontSize: isTablet
-                                                            ? 18
-                                                            : 14,
-                                                    },
-                                                ]}
+                                                style={styles(scale, fontScale, spacing).actionButtonText}
                                             >
                                                 Add Funds
                                             </Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity
                                             style={[
-                                                styles.actionButton,
-                                                styles.withdrawButton,
-                                                {
-                                                    paddingVertical: isTablet
-                                                        ? 16
-                                                        : 12,
-                                                    borderRadius: isTablet
-                                                        ? 16
-                                                        : 12,
-                                                },
+                                                styles(scale, fontScale, spacing).actionButton,
+                                                styles(scale, fontScale, spacing).withdrawButton,
                                             ]}
                                             activeOpacity={0.8}
                                         >
                                             <Icon
                                                 name="trending-down"
-                                                size={isTablet ? 22 : 18}
+                                                size={Math.round((isTablet ? 22 : 18) * scale)}
                                                 color="#fff"
                                             />
                                             <Text
-                                                style={[
-                                                    styles.actionButtonText,
-                                                    {
-                                                        fontSize: isTablet
-                                                            ? 18
-                                                            : 14,
-                                                    },
-                                                ]}
+                                                style={styles(scale, fontScale, spacing).actionButtonText}
                                             >
                                                 Withdraw
                                             </Text>
@@ -274,43 +192,26 @@ export default function UserBalance() {
                                 </View>
 
                                 {/* Right Section - Transaction History */}
-                                <View style={styles.rightSection}>
+                                <View style={styles(scale, fontScale, spacing).rightSection}>
                                     <View
                                         style={{
                                             flexDirection: "row",
                                             alignItems: "center",
-                                            marginBottom: 16,
+                                            marginBottom: spacing.md,
                                         }}
                                     >
                                         <Text
-                                            style={[
-                                                styles.historyTitle,
-                                                {
-                                                    fontSize: isTablet
-                                                        ? 22
-                                                        : 18,
-                                                },
-                                                { flex: 1 },
-                                            ]}
+                                            style={[styles(scale, fontScale, spacing).historyTitle, { flex: 1 }]}
                                         >
                                             Recent Transactions
                                         </Text>
                                         <TouchableOpacity
                                             onPress={handleBack}
-                                            style={[
-                                                styles.backButton,
-                                                {
-                                                    padding: isTablet ? 12 : 8,
-                                                    borderRadius: isTablet
-                                                        ? 24
-                                                        : 22,
-                                                    marginLeft: 12,
-                                                },
-                                            ]}
+                                            style={styles(scale, fontScale, spacing).backButton}
                                         >
                                             <Icon
                                                 name="arrow-back"
-                                                size={isTablet ? 24 : 20}
+                                                size={Math.round((isTablet ? 24 : 20) * scale)}
                                                 color="#fff"
                                             />
                                         </TouchableOpacity>
@@ -321,26 +222,11 @@ export default function UserBalance() {
                                             renderItem={({ item }) => (
                                                 <View
                                                     style={[
-                                                        styles.transactionItem,
-                                                        {
-                                                            borderRadius:
-                                                                isTablet
-                                                                    ? 16
-                                                                    : 12,
-                                                            padding: isTablet
-                                                                ? 20
-                                                                : 16,
-                                                            marginBottom:
-                                                                isTablet
-                                                                    ? 12
-                                                                    : 8,
-                                                        },
+                                                        styles(scale, fontScale, spacing).transactionItem,
                                                     ]}
                                                 >
                                                     <View
-                                                        style={
-                                                            styles.transactionLeft
-                                                        }
+                                                        style={styles(scale, fontScale, spacing).transactionLeft}
                                                     >
                                                         <Icon
                                                             name={
@@ -349,11 +235,7 @@ export default function UserBalance() {
                                                                 ]?.name ||
                                                                 "paid"
                                                             }
-                                                            size={
-                                                                isTablet
-                                                                    ? 28
-                                                                    : 24
-                                                            }
+                                                            size={Math.round((isTablet ? 28 : 24) * scale)}
                                                             color={
                                                                 transactionIcons[
                                                                     item.type
@@ -363,38 +245,16 @@ export default function UserBalance() {
                                                         />
                                                         <View
                                                             style={[
-                                                                styles.transactionInfo,
-                                                                {
-                                                                    marginLeft:
-                                                                        isTablet
-                                                                            ? 16
-                                                                            : 12,
-                                                                },
+                                                                styles(scale, fontScale, spacing).transactionInfo,
                                                             ]}
                                                         >
                                                             <Text
-                                                                style={[
-                                                                    styles.transactionType,
-                                                                    {
-                                                                        fontSize:
-                                                                            isTablet
-                                                                                ? 18
-                                                                                : 14,
-                                                                    },
-                                                                ]}
+                                                                style={styles(scale, fontScale, spacing).transactionType}
                                                             >
                                                                 {item.type}
                                                             </Text>
                                                             <Text
-                                                                style={[
-                                                                    styles.transactionDate,
-                                                                    {
-                                                                        fontSize:
-                                                                            isTablet
-                                                                                ? 16
-                                                                                : 12,
-                                                                    },
-                                                                ]}
+                                                                style={styles(scale, fontScale, spacing).transactionDate}
                                                             >
                                                                 {item.date}
                                                             </Text>
@@ -402,17 +262,13 @@ export default function UserBalance() {
                                                     </View>
                                                     <Text
                                                         style={[
-                                                            styles.transactionAmount,
+                                                            styles(scale, fontScale, spacing).transactionAmount,
                                                             {
                                                                 color:
                                                                     item.amount >=
                                                                     0
                                                                         ? "#4ade80"
                                                                         : "#f87171",
-                                                                fontSize:
-                                                                    isTablet
-                                                                        ? 20
-                                                                        : 16,
                                                             },
                                                         ]}
                                                     >
@@ -429,37 +285,15 @@ export default function UserBalance() {
                                             keyExtractor={(item) =>
                                                 item.id.toString()
                                             }
-                                            style={[
-                                                styles.transactionList,
-                                                {
-                                                    maxHeight: isTablet
-                                                        ? 350
-                                                        : 280,
-                                                },
-                                            ]}
+                                            style={styles(scale, fontScale, spacing).transactionList}
                                             showsVerticalScrollIndicator={false}
                                         />
                                     ) : (
                                         <View
-                                            style={[
-                                                styles.emptyState,
-                                                {
-                                                    borderRadius: isTablet
-                                                        ? 16
-                                                        : 12,
-                                                    padding: isTablet ? 40 : 32,
-                                                },
-                                            ]}
+                                            style={styles(scale, fontScale, spacing).emptyState}
                                         >
                                             <Text
-                                                style={[
-                                                    styles.emptyStateText,
-                                                    {
-                                                        fontSize: isTablet
-                                                            ? 18
-                                                            : 14,
-                                                    },
-                                                ]}
+                                                style={styles(scale, fontScale, spacing).emptyStateText}
                                             >
                                                 No balance history available.
                                             </Text>
@@ -469,7 +303,7 @@ export default function UserBalance() {
                             </View>
                         )}
                         keyExtractor={(item) => item.key}
-                        contentContainerStyle={styles.scrollContainer}
+                        contentContainerStyle={styles(scale, fontScale, spacing).scrollContainer}
                         showsVerticalScrollIndicator={false}
                     />
                 </LinearGradient>
@@ -478,7 +312,7 @@ export default function UserBalance() {
     );
 }
 
-const styles = StyleSheet.create({
+const styles = (scale: number, fontScale: number, spacing: any) => StyleSheet.create({
     container: {
         flex: 1,
     },
@@ -488,74 +322,91 @@ const styles = StyleSheet.create({
     scrollContainer: {
         flexGrow: 1,
         justifyContent: "center",
-        paddingHorizontal: 20,
-        paddingVertical: 20,
+        paddingHorizontal: spacing.lg,
+        paddingVertical: spacing.lg,
     },
     content: {
         flexDirection: "row",
         backgroundColor: "rgba(0,0,0,0.2)",
-        borderRadius: 24,
-        padding: 24,
+        borderRadius: Math.round(24 * scale),
+        padding: spacing.lg,
         borderWidth: 1,
         borderColor: "rgba(255,255,255,0.1)",
         maxWidth: 900,
         alignSelf: "center",
         width: "100%",
-        minHeight: 350,
+        minHeight: Math.round(350 * scale),
     },
     leftSection: {
         flex: 1,
-        paddingRight: 24,
+        paddingRight: spacing.lg,
     },
     rightSection: {
         flex: 1.2,
-        paddingLeft: 24,
+        paddingLeft: spacing.lg,
     },
     header: {
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        marginBottom: 24,
+        marginBottom: spacing.lg,
     },
     title: {
         fontWeight: "bold",
         color: "#fff",
+        fontSize: Math.round(24 * fontScale),
     },
     backButton: {
         backgroundColor: "rgba(255,255,255,0.1)",
+        padding: spacing.sm,
+        borderRadius: Math.round(24 * scale),
+        marginLeft: spacing.sm,
     },
     balanceCard: {
         backgroundColor: "rgba(255,255,255,0.1)",
         alignItems: "center",
         borderWidth: 1,
         borderColor: "rgba(255,255,255,0.1)",
+        borderRadius: Math.round(20 * scale),
+        padding: spacing.xl,
+        marginBottom: spacing.xl,
     },
     balanceLabel: {
         color: "rgba(255,255,255,0.7)",
         textTransform: "uppercase",
         letterSpacing: 1,
-        marginBottom: 8,
+        marginBottom: spacing.sm,
+        fontSize: Math.round(14 * fontScale),
     },
     balanceAmount: {
         fontWeight: "bold",
         color: "#fff",
         letterSpacing: -1,
+        fontSize: Math.round(36 * fontScale),
     },
     freeTrialBadge: {
         backgroundColor: "rgba(251, 191, 36, 0.2)",
+        borderRadius: Math.round(16 * scale),
+        paddingHorizontal: spacing.md,
+        paddingVertical: spacing.xs,
+        marginTop: spacing.sm,
     },
     freeTrialText: {
         color: "#fbbf24",
+        fontSize: Math.round(12 * fontScale),
     },
     actionButtons: {
         flexDirection: "row",
+        gap: spacing.md,
     },
     actionButton: {
         flex: 1,
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
-        gap: 6,
+        gap: spacing.xs,
+        paddingVertical: spacing.md,
+        borderRadius: Math.round(16 * scale),
     },
     addFundsButton: {
         backgroundColor: "rgba(34, 197, 94, 0.8)",
@@ -566,45 +417,58 @@ const styles = StyleSheet.create({
     actionButtonText: {
         color: "#fff",
         fontWeight: "600",
+        fontSize: Math.round(16 * fontScale),
     },
     historyTitle: {
         fontWeight: "600",
         color: "#fff",
-        marginBottom: 16,
+        fontSize: Math.round(20 * fontScale),
     },
     transactionList: {
         flex: 1,
+        maxHeight: Math.round(320 * scale),
     },
     transactionItem: {
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
         backgroundColor: "rgba(255,255,255,0.05)",
+        borderRadius: Math.round(16 * scale),
+        padding: spacing.md,
+        marginBottom: spacing.sm,
     },
     transactionLeft: {
         flexDirection: "row",
         alignItems: "center",
         flex: 1,
     },
-    transactionInfo: {},
+    transactionInfo: {
+        marginLeft: spacing.md,
+    },
     transactionType: {
         fontWeight: "600",
         color: "#fff",
+        fontSize: Math.round(16 * fontScale),
     },
     transactionDate: {
         color: "rgba(255,255,255,0.6)",
-        marginTop: 2,
+        marginTop: spacing.xs / 2,
+        fontSize: Math.round(14 * fontScale),
     },
     transactionAmount: {
         fontWeight: "bold",
+        fontSize: Math.round(18 * fontScale),
     },
     emptyState: {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "rgba(255,255,255,0.05)",
+        borderRadius: Math.round(16 * scale),
+        padding: spacing.xl,
     },
     emptyStateText: {
         color: "rgba(255,255,255,0.6)",
+        fontSize: Math.round(16 * fontScale),
     },
 });
