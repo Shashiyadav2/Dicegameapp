@@ -1,13 +1,13 @@
 import Icon from "@expo/vector-icons/MaterialIcons";
 import { LinearGradient } from "expo-linear-gradient";
-import { StatusBar } from "expo-status-bar";
 import { useRouter } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import {
     Alert,
+    Dimensions,
     Image,
     SafeAreaView,
-    ScrollView,
     StyleSheet,
     Text,
     TextInput,
@@ -15,7 +15,6 @@ import {
     View,
 } from "react-native";
 import OrientationLock from "../src/components/common/OrientationLock";
-import { useResponsiveDimensions } from "../src/hooks/useResponsiveDimensions";
 
 // --- Type Definitions ---
 interface User {
@@ -34,11 +33,15 @@ const DUMMY_USER: User = {
 };
 
 export default function UserProfile() {
-    const { width, height, scale, fontScale, spacing, isTablet } = useResponsiveDimensions();
     const router = useRouter();
     const [name, setName] = useState(DUMMY_USER.name);
     const [email, setEmail] = useState(DUMMY_USER.email);
     const [phone, setPhone] = useState(DUMMY_USER.phone);
+
+    // Get screen dimensions
+    const { width, height } = Dimensions.get("window");
+    const isLandscape = width > height;
+    const responsiveScale = Math.min(width, height) / 400; // Base scale on smaller dimension
 
     const handleSubmit = () => {
         Alert.alert(
@@ -52,263 +55,290 @@ export default function UserProfile() {
         router.back();
     };
 
+    // Calculate responsive values
+    const responsiveStyles = createResponsiveStyles(
+        responsiveScale,
+        isLandscape
+    );
+
     return (
-        <OrientationLock>
-            <SafeAreaView style={[styles.container, { width, height }]}>
+        <OrientationLock orientation="landscape">
+            <SafeAreaView style={responsiveStyles.container}>
                 <StatusBar hidden />
                 <LinearGradient
                     colors={["#312e81", "#7c3aed"]}
-                    style={styles(scale, fontScale, spacing).gradient}
+                    style={responsiveStyles.gradient}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 1 }}
                 >
-                    <ScrollView
-                        contentContainerStyle={styles(scale, fontScale, spacing).scrollContainer}
-                        showsVerticalScrollIndicator={false}
-                    >
-                        <View
-                            style={[
-                                styles(scale, fontScale, spacing).content,
-                                { maxWidth: Math.round((isTablet ? 1000 : 800) * scale) },
-                            ]}
-                        >
-                            {/* Left Section - Avatar */}
-                            <View style={styles(scale, fontScale, spacing).leftSection}>
-                                <View style={styles(scale, fontScale, spacing).avatarContainer}>
-                                    <Image
-                                        source={{ uri: DUMMY_USER.avatar }}
-                                        style={[
-                                            styles(scale, fontScale, spacing).avatar,
-                                            {
-                                                width: Math.round(130 * scale),
-                                                height: Math.round(130 * scale),
-                                                borderRadius: Math.round(65 * scale),
-                                            },
-                                        ]}
-                                    />
-                                    <TouchableOpacity
-                                        style={styles(scale, fontScale, spacing).cameraButton}
-                                    >
-                                        <Icon
-                                            name="camera-alt"
-                                            size={Math.round(18 * scale)}
-                                            color="#fff"
-                                        />
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-
-                            {/* Right Section - Form */}
-                            <View style={styles(scale, fontScale, spacing).rightSection}>
-                                <View style={styles(scale, fontScale, spacing).header}>
-                                    <Text
-                                        style={styles(scale, fontScale, spacing).title}
-                                    >
-                                        My Profile
-                                    </Text>
-                                    <TouchableOpacity
-                                        onPress={handleBack}
-                                        style={styles(scale, fontScale, spacing).backButton}
-                                    >
-                                        <Icon
-                                            name="arrow-back"
-                                            size={Math.round(22 * scale)}
-                                            color="#fff"
-                                        />
-                                    </TouchableOpacity>
-                                </View>
-
-                                <View
-                                    style={styles(scale, fontScale, spacing).form}
+                    <View style={responsiveStyles.content}>
+                        {/* Left Section - Avatar */}
+                        <View style={responsiveStyles.leftSection}>
+                            <View style={responsiveStyles.avatarContainer}>
+                                <Image
+                                    source={{ uri: DUMMY_USER.avatar }}
+                                    style={responsiveStyles.avatar}
+                                />
+                                <TouchableOpacity
+                                    style={responsiveStyles.cameraButton}
                                 >
-                                    <View
-                                        style={styles(scale, fontScale, spacing).inputContainer}
-                                    >
-                                        <Icon
-                                            name="person"
-                                            size={Math.round(22 * scale)}
-                                            color="rgba(255,255,255,0.4)"
-                                            style={styles(scale, fontScale, spacing).inputIcon}
-                                        />
-                                        <TextInput
-                                            style={styles(scale, fontScale, spacing).input}
-                                            value={name}
-                                            onChangeText={setName}
-                                            placeholder="Full Name"
-                                            placeholderTextColor="rgba(255,255,255,0.4)"
-                                        />
-                                    </View>
-
-                                    <View
-                                        style={styles(scale, fontScale, spacing).inputContainer}
-                                    >
-                                        <Icon
-                                            name="email"
-                                            size={Math.round(22 * scale)}
-                                            color="rgba(255,255,255,0.4)"
-                                            style={styles(scale, fontScale, spacing).inputIcon}
-                                        />
-                                        <TextInput
-                                            style={styles(scale, fontScale, spacing).input}
-                                            value={email}
-                                            onChangeText={setEmail}
-                                            placeholder="Email Address"
-                                            placeholderTextColor="rgba(255,255,255,0.4)"
-                                            keyboardType="email-address"
-                                        />
-                                    </View>
-
-                                    <View
-                                        style={styles(scale, fontScale, spacing).inputContainer}
-                                    >
-                                        <Icon
-                                            name="phone"
-                                            size={Math.round(22 * scale)}
-                                            color="rgba(255,255,255,0.4)"
-                                            style={styles(scale, fontScale, spacing).inputIcon}
-                                        />
-                                        <TextInput
-                                            style={styles(scale, fontScale, spacing).input}
-                                            value={phone}
-                                            onChangeText={setPhone}
-                                            placeholder="Phone Number"
-                                            placeholderTextColor="rgba(255,255,255,0.4)"
-                                            keyboardType="phone-pad"
-                                        />
-                                    </View>
-
-                                    <TouchableOpacity
-                                        style={styles(scale, fontScale, spacing).submitButton}
-                                        onPress={handleSubmit}
-                                        activeOpacity={0.8}
-                                    >
-                                        <LinearGradient
-                                            colors={["#3b82f6", "#8b5cf6"]}
-                                            style={styles(scale, fontScale, spacing).submitGradient}
-                                            start={{ x: 0, y: 0 }}
-                                            end={{ x: 1, y: 0 }}
-                                        >
-                                            <Text
-                                                style={styles(scale, fontScale, spacing).submitText}
-                                            >
-                                                Save Changes
-                                            </Text>
-                                        </LinearGradient>
-                                    </TouchableOpacity>
-                                </View>
+                                    <Icon
+                                        name="camera-alt"
+                                        size={
+                                            responsiveStyles.cameraButton
+                                                .width / 2
+                                        }
+                                        color="#fff"
+                                    />
+                                </TouchableOpacity>
                             </View>
                         </View>
-                    </ScrollView>
+
+                        {/* Right Section - Form */}
+                        <View style={responsiveStyles.rightSection}>
+                            <View style={responsiveStyles.header}>
+                                <Text style={responsiveStyles.title}>
+                                    My Profile
+                                </Text>
+                                <TouchableOpacity
+                                    onPress={handleBack}
+                                    style={responsiveStyles.backButton}
+                                >
+                                    <Icon
+                                        name="arrow-back"
+                                        size={
+                                            responsiveStyles.backButton.width /
+                                            2
+                                        }
+                                        color="#fff"
+                                    />
+                                </TouchableOpacity>
+                            </View>
+
+                            <View style={responsiveStyles.form}>
+                                <View style={responsiveStyles.inputContainer}>
+                                    <Icon
+                                        name="person"
+                                        size={
+                                            responsiveStyles.inputIcon.fontSize
+                                        }
+                                        color="rgba(255,255,255,0.4)"
+                                        style={responsiveStyles.inputIcon}
+                                    />
+                                    <TextInput
+                                        style={responsiveStyles.input}
+                                        value={name}
+                                        onChangeText={setName}
+                                        placeholder="Full Name"
+                                        placeholderTextColor="rgba(255,255,255,0.4)"
+                                    />
+                                </View>
+
+                                <View style={responsiveStyles.inputContainer}>
+                                    <Icon
+                                        name="email"
+                                        size={
+                                            responsiveStyles.inputIcon.fontSize
+                                        }
+                                        color="rgba(255,255,255,0.4)"
+                                        style={responsiveStyles.inputIcon}
+                                    />
+                                    <TextInput
+                                        style={responsiveStyles.input}
+                                        value={email}
+                                        onChangeText={setEmail}
+                                        placeholder="Email Address"
+                                        placeholderTextColor="rgba(255,255,255,0.4)"
+                                        keyboardType="email-address"
+                                    />
+                                </View>
+
+                                <View style={responsiveStyles.inputContainer}>
+                                    <Icon
+                                        name="phone"
+                                        size={
+                                            responsiveStyles.inputIcon.fontSize
+                                        }
+                                        color="rgba(255,255,255,0.4)"
+                                        style={responsiveStyles.inputIcon}
+                                    />
+                                    <TextInput
+                                        style={responsiveStyles.input}
+                                        value={phone}
+                                        onChangeText={setPhone}
+                                        placeholder="Phone Number"
+                                        placeholderTextColor="rgba(255,255,255,0.4)"
+                                        keyboardType="phone-pad"
+                                    />
+                                </View>
+
+                                <TouchableOpacity
+                                    style={responsiveStyles.submitButton}
+                                    onPress={handleSubmit}
+                                    activeOpacity={0.8}
+                                >
+                                    <LinearGradient
+                                        colors={["#3b82f6", "#8b5cf6"]}
+                                        style={responsiveStyles.submitGradient}
+                                        start={{ x: 0, y: 0 }}
+                                        end={{ x: 1, y: 0 }}
+                                    >
+                                        <Text
+                                            style={responsiveStyles.submitText}
+                                        >
+                                            Save Changes
+                                        </Text>
+                                    </LinearGradient>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
                 </LinearGradient>
             </SafeAreaView>
         </OrientationLock>
     );
 }
 
-const styles = (scale: number, fontScale: number, spacing: any) => StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    gradient: {
-        flex: 1,
-    },
-    scrollContainer: {
-        flexGrow: 1,
-        justifyContent: "center",
-        paddingHorizontal: spacing.lg,
-        paddingVertical: spacing.lg,
-    },
-    content: {
-        flexDirection: "row",
-        backgroundColor: "rgba(0,0,0,0.2)",
-        borderRadius: Math.round(24 * scale),
-        padding: spacing.lg,
-        borderWidth: 1,
-        borderColor: "rgba(255,255,255,0.1)",
-        maxWidth: 800,
-        alignSelf: "center",
-        width: "100%",
-    },
-    leftSection: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        paddingRight: spacing.lg,
-    },
-    rightSection: {
-        flex: 2,
-    },
-    header: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginBottom: spacing.lg,
-    },
-    title: {
-        fontWeight: "bold",
-        color: "#fff",
-        fontSize: Math.round(26 * fontScale),
-    },
-    backButton: {
-        backgroundColor: "rgba(255,255,255,0.1)",
-        padding: spacing.sm,
-        borderRadius: Math.round(24 * scale),
-    },
-    avatarContainer: {
-        position: "relative",
-        alignItems: "center",
-    },
-    avatar: {
-        borderWidth: 4,
-        borderColor: "rgba(255,255,255,0.2)",
-    },
-    cameraButton: {
-        position: "absolute",
-        bottom: 0,
-        right: 0,
-        backgroundColor: "#3b82f6",
-        borderWidth: 2,
-        borderColor: "#1e293b",
-        padding: spacing.sm,
-        borderRadius: Math.round(20 * scale),
-    },
-    form: {
-        gap: spacing.lg,
-    },
-    inputContainer: {
-        position: "relative",
-        flexDirection: "row",
-        alignItems: "center",
-        backgroundColor: "rgba(255,255,255,0.05)",
-        borderWidth: 1,
-        borderColor: "rgba(255,255,255,0.1)",
-        borderRadius: Math.round(16 * scale),
-    },
-    inputIcon: {
-        position: "absolute",
-        left: spacing.md,
-        zIndex: 1,
-    },
-    input: {
-        flex: 1,
-        paddingLeft: Math.round(50 * scale),
-        paddingRight: spacing.md,
-        paddingVertical: spacing.md,
-        color: "#fff",
-        fontSize: Math.round(18 * fontScale),
-    },
-    submitButton: {
-        overflow: "hidden",
-        borderRadius: Math.round(16 * scale),
-        marginTop: spacing.lg,
-    },
-    submitGradient: {
-        alignItems: "center",
-        paddingVertical: spacing.lg,
-    },
-    submitText: {
-        color: "#fff",
-        fontWeight: "bold",
-        fontSize: Math.round(18 * fontScale),
-    },
-});
+const createResponsiveStyles = (scale: number, isLandscape: boolean) => {
+    // Base sizes for landscape orientation
+    const baseSizes = {
+        containerPadding: 20,
+        contentPadding: 20,
+        avatarSize: isLandscape ? 150 : 100,
+        avatarBorderRadius: 75,
+        cameraButtonSize: 40,
+        backButtonSize: 44,
+        titleFontSize: 26,
+        inputFontSize: 18,
+        inputIconSize: 22,
+        inputHeight: 50,
+        submitButtonHeight: 50,
+        submitFontSize: 18,
+        gap: 20,
+        inputLeftPadding: 50,
+    };
+
+    // Scale all dimensions
+    const scaledSizes = Object.fromEntries(
+        Object.entries(baseSizes).map(([key, value]) => [key, value * scale])
+    ) as typeof baseSizes;
+
+    return StyleSheet.create({
+        container: {
+            flex: 1,
+            width: "100%",
+            height: "100%",
+        },
+        gradient: {
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+        },
+        content: {
+            flexDirection: "row",
+            backgroundColor: "rgba(0,0,0,0.2)",
+            borderRadius: scaledSizes.contentPadding,
+            padding: scaledSizes.contentPadding,
+            borderWidth: 1,
+            borderColor: "rgba(255,255,255,0.1)",
+            width: "90%",
+            maxWidth: 800,
+            maxHeight: 500,
+        },
+        leftSection: {
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            paddingRight: scaledSizes.gap,
+        },
+        rightSection: {
+            flex: 2,
+        },
+        header: {
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: scaledSizes.gap,
+        },
+        title: {
+            fontWeight: "bold",
+            color: "#fff",
+            fontSize: scaledSizes.titleFontSize,
+        },
+        backButton: {
+            backgroundColor: "rgba(255,255,255,0.1)",
+            padding: scaledSizes.gap / 2,
+            borderRadius: scaledSizes.backButtonSize,
+            width: scaledSizes.backButtonSize,
+            height: scaledSizes.backButtonSize,
+            justifyContent: "center",
+            alignItems: "center",
+        },
+        avatarContainer: {
+            position: "relative",
+            alignItems: "center",
+        },
+        avatar: {
+            width: scaledSizes.avatarSize,
+            height: scaledSizes.avatarSize,
+            borderRadius: scaledSizes.avatarBorderRadius,
+            borderWidth: 4,
+            borderColor: "rgba(255,255,255,0.2)",
+        },
+        cameraButton: {
+            position: "absolute",
+            bottom: 0,
+            right: 0,
+            backgroundColor: "#3b82f6",
+            borderWidth: 2,
+            borderColor: "#1e293b",
+            padding: scaledSizes.gap / 2,
+            borderRadius: scaledSizes.cameraButtonSize,
+            width: scaledSizes.cameraButtonSize,
+            height: scaledSizes.cameraButtonSize,
+            justifyContent: "center",
+            alignItems: "center",
+        },
+        form: {
+            gap: scaledSizes.gap,
+        },
+        inputContainer: {
+            position: "relative",
+            flexDirection: "row",
+            alignItems: "center",
+            backgroundColor: "rgba(255,255,255,0.05)",
+            borderWidth: 1,
+            borderColor: "rgba(255,255,255,0.1)",
+            borderRadius: scaledSizes.contentPadding,
+            height: scaledSizes.inputHeight,
+        },
+        inputIcon: {
+            position: "absolute",
+            left: scaledSizes.gap,
+            fontSize: scaledSizes.inputIconSize,
+        },
+        input: {
+            flex: 1,
+            paddingLeft: scaledSizes.inputLeftPadding,
+            paddingRight: scaledSizes.gap,
+            color: "#fff",
+            fontSize: scaledSizes.inputFontSize,
+            height: "100%",
+        },
+        submitButton: {
+            overflow: "hidden",
+            borderRadius: scaledSizes.contentPadding,
+            marginTop: scaledSizes.gap,
+        },
+        submitGradient: {
+            alignItems: "center",
+            justifyContent: "center",
+            height: scaledSizes.submitButtonHeight,
+        },
+        submitText: {
+            color: "#fff",
+            fontWeight: "bold",
+            fontSize: scaledSizes.submitFontSize,
+        },
+    });
+};

@@ -26,7 +26,19 @@ export default function Login({
     setMobileNumber,
     setCurrentScreen,
 }: LoginProps) {
-    const { width, height, scale, fontScale, spacing, isTablet } = useResponsiveDimensions();
+    const { width, height } = useResponsiveDimensions();
+
+    // Dynamic sizing for landscape responsiveness
+    const lottieSize = width * 0.25;
+    const brandTextFontSize = width * 0.03;
+    const brandSubtextFontSize = width * 0.018;
+    const cardMaxWidth = width * 0.45;
+    const loginTitleFontSize = width * 0.025;
+    const loginSubtitleFontSize = width * 0.016;
+    const inputFontSize = width * 0.016;
+    const buttonTextFontSize = width * 0.018;
+    const borderRadius = width * 0.02;
+    const padding = width * 0.02;
     const fadeAnim = useRef(new Animated.Value(0)).current;
     const slideAnim = useRef(new Animated.Value(50)).current;
     const scaleAnim = useRef(new Animated.Value(0.9)).current;
@@ -91,7 +103,12 @@ export default function Login({
                 >
                     <Animated.View
                         style={[
-                            styles(scale, fontScale, spacing).loginContainer,
+                            styles.loginContainer,
+                            {
+                                paddingTop:
+                                    Platform.OS === "ios" ? padding * 2 : padding,
+                                paddingHorizontal: padding,
+                            },
                             {
                                 opacity: fadeAnim,
                                 transform: [
@@ -102,13 +119,13 @@ export default function Login({
                             },
                         ]}
                     >
-                        <View style={[styles(scale, fontScale, spacing).leftPanel, { flex: 1 }]}>
+                        <View style={[styles.leftPanel, { flex: 1 }]}>
                             <View
                                 style={[
-                                    styles(scale, fontScale, spacing).animationContainer,
+                                    styles.animationContainer,
                                     {
-                                        width: Math.round(270 * scale),
-                                        height: Math.round(270 * scale),
+                                        width: lottieSize,
+                                        height: lottieSize,
                                     },
                                 ]}
                             >
@@ -116,42 +133,58 @@ export default function Login({
                                     source={require("../../assets/animation/login-animation.json")}
                                     autoPlay
                                     loop
-                                    style={styles(scale, fontScale, spacing).lottieAnimation}
+                                    style={styles.lottieAnimation}
                                 />
                             </View>
                             <Text
-                                style={styles(scale, fontScale, spacing).brandText}
+                                style={[
+                                    styles.brandText,
+                                    { fontSize: brandTextFontSize },
+                                ]}
                             >
                                 Welcome
                             </Text>
                             <Text
-                                style={styles(scale, fontScale, spacing).brandSubtext}
+                                style={[
+                                    styles.brandSubtext,
+                                    { fontSize: brandSubtextFontSize },
+                                ]}
                             >
                                 To ICW Gaming Platform
                             </Text>
                         </View>
 
-                        <View style={[styles(scale, fontScale, spacing).rightPanel, { flex: 1 }]}>
+                        <View style={[styles.rightPanel, { flex: 1 }]}>
                             <View
                                 style={[
-                                    styles(scale, fontScale, spacing).card,
-                                    { maxWidth: Math.round(520 * scale) },
+                                    styles.card,
+                                    {
+                                        maxWidth: cardMaxWidth,
+                                        borderRadius: borderRadius,
+                                        padding: padding,
+                                    },
                                 ]}
                             >
                                 <Text
-                                    style={styles(scale, fontScale, spacing).loginTitle}
+                                    style={[
+                                        styles.loginTitle,
+                                        { fontSize: loginTitleFontSize },
+                                    ]}
                                 >
                                     Welcome Back
                                 </Text>
                                 <Text
-                                    style={styles(scale, fontScale, spacing).loginSubtitle}
+                                    style={[
+                                        styles.loginSubtitle,
+                                        { fontSize: loginSubtitleFontSize },
+                                    ]}
                                 >
                                     Sign in to continue your journey
                                 </Text>
 
-                                <View style={styles(scale, fontScale, spacing).inputWrapper}>
+                                <View style={[styles.inputWrapper, { borderRadius: borderRadius * 0.75 }]}>
                                     <TextInput
-                                        style={styles(scale, fontScale, spacing).input}
+                                        style={[styles.input, { fontSize: inputFontSize, paddingVertical: padding * 0.75 }]}
                                         placeholder="Mobile Number"
                                         placeholderTextColor="rgba(255, 255, 255, 0.6)"
                                         value={mobileNumber}
@@ -167,17 +200,22 @@ export default function Login({
                                     }}
                                 >
                                     <TouchableOpacity
-                                        style={styles(scale, fontScale, spacing).button}
+                                        style={[styles.button, { borderRadius: borderRadius }]}
                                         onPress={handleButtonPress}
                                     >
                                         <LinearGradient
                                             colors={["#ff6b6b", "#ff8e53"]}
                                             start={{ x: 0, y: 0 }}
                                             end={{ x: 1, y: 0 }}
-                                            style={styles(scale, fontScale, spacing).buttonGradient}
+                                            style={[styles.buttonGradient, { paddingVertical: padding * 0.8 }]}
                                         >
                                             <Text
-                                                style={styles(scale, fontScale, spacing).buttonText}
+                                                style={[
+                                                    styles.buttonText,
+                                                    {
+                                                        fontSize: buttonTextFontSize,
+                                                    },
+                                                ]}
                                             >
                                                 Send OTP
                                             </Text>
@@ -193,23 +231,23 @@ export default function Login({
     );
 }
 
-const styles = (scale: number, fontScale: number, spacing: any) => StyleSheet.create({
+const styles = StyleSheet.create({
     container: { flex: 1 },
     loginContainer: {
         flex: 1,
-        paddingTop: Platform.OS === "ios" ? Math.round(50 * scale) : Math.round((StatusBar.currentHeight || 20) * scale),
+        flexDirection: "row",
     },
     leftPanel: {
         alignItems: "center",
         justifyContent: "center",
-        padding: spacing.lg,
+        padding: 24,
     },
     rightPanel: {
-        paddingHorizontal: spacing.lg,
+        paddingHorizontal: 24,
         justifyContent: "center",
     },
     animationContainer: {
-        marginBottom: spacing.lg,
+        marginBottom: 24,
     },
     lottieAnimation: {
         width: "100%",
@@ -217,59 +255,47 @@ const styles = (scale: number, fontScale: number, spacing: any) => StyleSheet.cr
     },
     brandText: {
         color: "white",
-        fontSize: Math.round(30 * fontScale),
         fontWeight: "bold",
         textAlign: "center",
     },
     brandSubtext: {
         color: "rgba(255, 255, 255, 0.8)",
-        fontSize: Math.round(18 * fontScale),
         textAlign: "center",
-        marginTop: spacing.sm,
+        marginTop: 8,
     },
     card: {
         backgroundColor: "rgba(255, 255, 255, 0.15)",
-        borderRadius: Math.round(24 * scale),
-        padding: spacing.xl,
         width: "100%",
         alignSelf: "center",
     },
     loginTitle: {
         color: "white",
-        fontSize: Math.round(28 * fontScale),
         fontWeight: "bold",
         textAlign: "center",
-        marginBottom: spacing.sm,
+        marginBottom: 8,
     },
     loginSubtitle: {
         color: "rgba(255, 255, 255, 0.8)",
-        fontSize: Math.round(18 * fontScale),
         textAlign: "center",
-        marginBottom: spacing.lg,
+        marginBottom: 24,
     },
     inputWrapper: {
         backgroundColor: "rgba(255, 255, 255, 0.1)",
-        borderRadius: Math.round(12 * scale),
-        paddingHorizontal: spacing.md,
-        marginBottom: spacing.md,
+        paddingHorizontal: 16,
+        marginBottom: 16,
     },
     input: {
         color: "white",
-        fontSize: Math.round(18 * fontScale),
-        paddingVertical: spacing.md,
     },
     button: {
-        borderRadius: Math.round(16 * scale),
         overflow: "hidden",
-        marginBottom: spacing.md,
+        marginBottom: 16,
     },
     buttonGradient: {
-        paddingVertical: spacing.md,
         alignItems: "center",
     },
     buttonText: {
         color: "white",
-        fontSize: Math.round(20 * fontScale),
         fontWeight: "600",
     },
 });

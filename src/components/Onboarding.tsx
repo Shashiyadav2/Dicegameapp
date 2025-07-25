@@ -7,6 +7,7 @@ import {
     Text,
     TouchableOpacity,
     View,
+    useWindowDimensions,
 } from "react-native";
 import { useResponsiveDimensions } from "../hooks/useResponsiveDimensions";
 import OrientationLock from "./common/OrientationLock";
@@ -28,7 +29,7 @@ const onboardingData = [
         lottie: require("../../assets/animation/onboarding2.json"),
         title: "All in? Or all out of excuses",
         description:
-            "No room for hesitation — it’s now or never. Make your move or miss your moment.",
+            "No room for hesitation — it's now or never. Make your move or miss your moment.",
     },
 ];
 
@@ -38,6 +39,8 @@ export default function Onboarding({
     setCurrentScreen,
 }: OnboardingProps) {
     const { width, height, scale, fontScale, spacing, isTablet } = useResponsiveDimensions();
+    const window = useWindowDimensions();
+    const isLandscape = window.width > window.height;
     const currentData = onboardingData[onboardingStep];
 
     const isSecondStep = onboardingStep === 1;
@@ -60,24 +63,24 @@ export default function Onboarding({
                 colors={["#667eea", "#764ba2", "#f093fb"]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
-                style={[styles(scale, fontScale, spacing).container, { width, height }]}
+                style={[styles(scale, fontScale, spacing, isLandscape).container, { width, height }]}
             >
                 <StatusBar hidden />
-                <View style={styles(scale, fontScale, spacing).onboardingContainer}>
+                <View style={styles(scale, fontScale, spacing, isLandscape).onboardingContainer}>
                     <TouchableOpacity
-                        style={styles(scale, fontScale, spacing).skipButton}
+                        style={styles(scale, fontScale, spacing, isLandscape).skipButton}
                         onPress={skipOnboarding}
                     >
-                        <Text style={styles(scale, fontScale, spacing).skipText}>Skip</Text>
+                        <Text style={styles(scale, fontScale, spacing, isLandscape).skipText}>Skip</Text>
                     </TouchableOpacity>
 
-                    <View style={styles(scale, fontScale, spacing).onboardingContent}>
+                    <View style={styles(scale, fontScale, spacing, isLandscape).onboardingContent}>
                         <View
                             style={[
-                                styles(scale, fontScale, spacing).lottieWrapper,
+                                styles(scale, fontScale, spacing, isLandscape).lottieWrapper,
                                 {
-                                    width: Math.round((isSecondStep ? 290 : 200) * scale),
-                                    height: Math.round((isSecondStep ? 290 : 200) * scale),
+                                    width: Math.round((isSecondStep ? (isLandscape ? 240 : 290) : (isLandscape ? 160 : 200)) * scale),
+                                    height: Math.round((isSecondStep ? (isLandscape ? 240 : 290) : (isLandscape ? 160 : 200)) * scale),
                                 },
                             ]}
                         >
@@ -85,50 +88,50 @@ export default function Onboarding({
                                 source={currentData.lottie}
                                 autoPlay
                                 loop
-                                style={styles(scale, fontScale, spacing).lottieAnimation}
+                                style={styles(scale, fontScale, spacing, isLandscape).lottieAnimation}
                             />
                         </View>
                     </View>
 
-                    <View style={styles(scale, fontScale, spacing).onboardingFooter}>
-                        <View style={styles(scale, fontScale, spacing).dotsContainer}>
+                    <View style={styles(scale, fontScale, spacing, isLandscape).onboardingFooter}>
+                        <View style={styles(scale, fontScale, spacing, isLandscape).dotsContainer}>
                             {onboardingData.map((_, index) => (
                                 <View
                                     key={index}
                                     style={[
-                                        styles(scale, fontScale, spacing).dot,
+                                        styles(scale, fontScale, spacing, isLandscape).dot,
                                         {
                                             width: Math.round(14 * scale),
                                             height: Math.round(14 * scale),
                                             borderRadius: Math.round(7 * scale),
                                         },
                                         index === onboardingStep
-                                            ? styles(scale, fontScale, spacing).activeDot
-                                            : styles(scale, fontScale, spacing).inactiveDot,
+                                            ? styles(scale, fontScale, spacing, isLandscape).activeDot
+                                            : styles(scale, fontScale, spacing, isLandscape).inactiveDot,
                                     ]}
                                 />
                             ))}
                         </View>
-                        <View style={styles(scale, fontScale, spacing).textAndButtonBlock}>
-                            <View style={styles(scale, fontScale, spacing).textBlock}>
-                                <Text style={styles(scale, fontScale, spacing).onboardingTitle}>
+                        <View style={styles(scale, fontScale, spacing, isLandscape).textAndButtonBlock}>
+                            <View style={styles(scale, fontScale, spacing, isLandscape).textBlock}>
+                                <Text style={styles(scale, fontScale, spacing, isLandscape).onboardingTitle}>
                                     {currentData.title}
                                 </Text>
-                                <Text style={styles(scale, fontScale, spacing).onboardingDescription}>
+                                <Text style={styles(scale, fontScale, spacing, isLandscape).onboardingDescription}>
                                     {currentData.description}
                                 </Text>
                             </View>
                             <TouchableOpacity
-                                style={styles(scale, fontScale, spacing).button}
+                                style={styles(scale, fontScale, spacing, isLandscape).button}
                                 onPress={nextOnboarding}
                             >
                                 <LinearGradient
                                     colors={["#ff6b6b", "#ff8e53"]}
                                     start={{ x: 0, y: 0 }}
                                     end={{ x: 1, y: 0 }}
-                                    style={styles(scale, fontScale, spacing).buttonGradient}
+                                    style={styles(scale, fontScale, spacing, isLandscape).buttonGradient}
                                 >
-                                    <Text style={styles(scale, fontScale, spacing).buttonText}>
+                                    <Text style={styles(scale, fontScale, spacing, isLandscape).buttonText}>
                                         {onboardingStep < onboardingData.length - 1
                                             ? "Next"
                                             : "Get Started"}
@@ -143,14 +146,14 @@ export default function Onboarding({
     );
 }
 
-const styles = (scale: number, fontScale: number, spacing: any) => StyleSheet.create({
+const styles = (scale: number, fontScale: number, spacing: any, isLandscape: boolean) => StyleSheet.create({
     container: {
         flex: 1,
     },
     onboardingContainer: {
         flex: 1,
-        paddingHorizontal: spacing.lg,
-        paddingTop: Math.round(50 * scale),
+        paddingHorizontal: isLandscape ? spacing.xl * 2 : spacing.lg,
+        paddingTop: isLandscape ? spacing.lg : Math.round(50 * scale),
         justifyContent: "space-between",
     },
     skipButton: {
@@ -163,12 +166,12 @@ const styles = (scale: number, fontScale: number, spacing: any) => StyleSheet.cr
     },
     onboardingContent: {
         flex: 1,
-        justifyContent: "center",
+        justifyContent: isLandscape ? "center" : "center",
         alignItems: "center",
-        paddingHorizontal: spacing.lg,
+        paddingHorizontal: isLandscape ? spacing.xl : spacing.lg,
     },
     lottieWrapper: {
-        marginBottom: spacing.sm,
+        marginBottom: isLandscape ? spacing.md : spacing.sm,
         alignItems: "center",
         justifyContent: "center",
     },
@@ -181,7 +184,7 @@ const styles = (scale: number, fontScale: number, spacing: any) => StyleSheet.cr
         width: "100%",
     },
     textBlock: {
-        marginBottom: spacing.lg,
+        marginBottom: isLandscape ? spacing.md : spacing.lg,
         alignItems: "center",
         width: "100%",
     },
@@ -192,24 +195,24 @@ const styles = (scale: number, fontScale: number, spacing: any) => StyleSheet.cr
         marginBottom: spacing.sm,
         paddingHorizontal: spacing.sm,
         width: "100%",
-        fontSize: Math.round(35 * fontScale),
+        fontSize: isLandscape ? Math.round(30 * fontScale) : Math.round(35 * fontScale),
     },
     onboardingDescription: {
         color: "rgba(255, 255, 255, 0.85)",
         textAlign: "center",
         lineHeight: Math.round(26 * fontScale),
-        maxWidth: Math.round(420 * scale),
+        maxWidth: isLandscape ? Math.round(600 * scale) : Math.round(420 * scale),
         paddingHorizontal: spacing.sm,
         width: "100%",
-        fontSize: Math.round(20 * fontScale),
+        fontSize: isLandscape ? Math.round(18 * fontScale) : Math.round(20 * fontScale),
     },
     onboardingFooter: {
         alignItems: "center",
-        marginBottom: Math.round(40 * scale),
+        marginBottom: isLandscape ? spacing.lg : Math.round(40 * scale),
     },
     dotsContainer: {
         flexDirection: "row",
-        marginTop: Math.round(90 * scale),
+        marginTop: isLandscape ? spacing.lg : Math.round(90 * scale),
     },
     dot: {
         marginHorizontal: spacing.xs,

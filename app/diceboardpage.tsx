@@ -2,13 +2,15 @@ import { VideoView, useVideoPlayer } from "expo-video";
 import React, { useEffect, useRef } from "react";
 import {
     Animated,
+    Dimensions,
     Easing,
     StyleSheet,
     Text,
     View,
 } from "react-native";
 import { GameProvider, useGameContext } from "../src/Context/gamecontext";
-import { useResponsiveDimensions } from "../src/hooks/useResponsiveDimensions";
+
+const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 // Utility function
 function timerStringToSeconds(timer: string): number {
@@ -18,7 +20,6 @@ function timerStringToSeconds(timer: string): number {
 
 // OnlineUsersCard Component
 const OnlineUsersCard: React.FC<{ count: number }> = ({ count }) => {
-    const { scale, fontScale, spacing, cardDimensions } = useResponsiveDimensions();
     const scaleAnim = useRef(new Animated.Value(1)).current;
     const pulseAnim = useRef(new Animated.Value(1)).current;
 
@@ -65,32 +66,32 @@ const OnlineUsersCard: React.FC<{ count: number }> = ({ count }) => {
     return (
         <Animated.View
             style={[
-                styles(scale, fontScale, spacing, cardDimensions).card,
-                styles(scale, fontScale, spacing, cardDimensions).onlineCard,
+                styles.card,
+                styles.onlineCard,
                 { transform: [{ scale: scaleAnim }] },
             ]}
         >
-            <View style={styles(scale, fontScale, spacing, cardDimensions).cardOverlay} />
-            <View style={styles(scale, fontScale, spacing, cardDimensions).cardContent}>
-                <View style={styles(scale, fontScale, spacing, cardDimensions).iconContainer}>
-                    <Text style={styles(scale, fontScale, spacing, cardDimensions).userIcon}>👥</Text>
+            <View style={styles.cardOverlay} />
+            <View style={styles.cardContent}>
+                <View style={styles.iconContainer}>
+                    <Text style={styles.userIcon}>👥</Text>
                     <Animated.View
                         style={[
-                            styles(scale, fontScale, spacing, cardDimensions).glowEffect,
+                            styles.glowEffect,
                             { transform: [{ scale: pulseAnim }] },
                         ]}
                     />
                 </View>
-                <View style={styles(scale, fontScale, spacing, cardDimensions).textContainer}>
-                    <Text style={styles(scale, fontScale, spacing, cardDimensions).countText}>{count}</Text>
-                    <Text style={styles(scale, fontScale, spacing, cardDimensions).labelText}>ONLINE PLAYERS</Text>
+                <View style={styles.textContainer}>
+                    <Text style={styles.countText}>{count}</Text>
+                    <Text style={styles.labelText}>ONLINE PLAYERS</Text>
                 </View>
-                <View style={styles(scale, fontScale, spacing, cardDimensions).statusDots}>
+                <View style={styles.statusDots}>
                     {[0, 1, 2].map((i) => (
                         <Animated.View
                             key={i}
                             style={[
-                                styles(scale, fontScale, spacing, cardDimensions).statusDot,
+                                styles.statusDot,
                                 {
                                     transform: [{ scale: pulseAnim }],
                                 },
@@ -105,7 +106,6 @@ const OnlineUsersCard: React.FC<{ count: number }> = ({ count }) => {
 
 // BetAmountCard Component
 const BetAmountCard: React.FC<{ amount: number }> = ({ amount }) => {
-    const { scale, fontScale, spacing, cardDimensions } = useResponsiveDimensions();
     const scaleAnim = useRef(new Animated.Value(1)).current;
     const rotateAnim = useRef(new Animated.Value(0)).current;
 
@@ -131,27 +131,27 @@ const BetAmountCard: React.FC<{ amount: number }> = ({ amount }) => {
     return (
         <Animated.View
             style={[
-                styles(scale, fontScale, spacing, cardDimensions).card,
-                styles(scale, fontScale, spacing, cardDimensions).betCard,
+                styles.card,
+                styles.betCard,
                 { transform: [{ scale: scaleAnim }] },
             ]}
         >
-            <View style={styles(scale, fontScale, spacing, cardDimensions).cardOverlay} />
-            <View style={styles(scale, fontScale, spacing, cardDimensions).cardContent}>
-                <View style={styles(scale, fontScale, spacing, cardDimensions).coinContainer}>
+            <View style={styles.cardOverlay} />
+            <View style={styles.cardContent}>
+                <View style={styles.coinContainer}>
                     {/*  <Image
             source={{ uri: `https://example.com/assets/${amount}rupee.png` }}
-            style={styles(scale, fontScale, spacing, cardDimensions).coinImage}
+            style={styles.coinImage}
             defaultSource={require('./assets/coin-placeholder.png')} // Add a placeholder
           /> */}
                     <Animated.View
-                        style={[styles(scale, fontScale, spacing, cardDimensions).coinGlow, { transform: [{ rotate }] }]}
+                        style={[styles.coinGlow, { transform: [{ rotate }] }]}
                     />
                 </View>
-                <Text style={styles(scale, fontScale, spacing, cardDimensions).betText}>
+                <Text style={styles.betText}>
                     You have selected ₹{amount} table
                 </Text>
-                <View style={styles(scale, fontScale, spacing, cardDimensions).statusIndicator} />
+                <View style={styles.statusIndicator} />
             </View>
         </Animated.View>
     );
@@ -163,7 +163,6 @@ const SlotPreviewCard: React.FC<{
     currentCity?: string;
     currentNumber?: number;
 }> = ({ gamePhase, currentCity, currentNumber }) => {
-    const { scale, fontScale, spacing, cardDimensions } = useResponsiveDimensions();
     const cityAnim = useRef(new Animated.Value(0)).current;
     const diceAnim = useRef(new Animated.Value(0)).current;
     const shimmerAnim = useRef(new Animated.Value(0)).current;
@@ -228,41 +227,41 @@ const SlotPreviewCard: React.FC<{
     });
 
     return (
-        <View style={[styles(scale, fontScale, spacing, cardDimensions).card, styles(scale, fontScale, spacing, cardDimensions).slotCard]}>
-            <View style={styles(scale, fontScale, spacing, cardDimensions).cardOverlay} />
-            <View style={styles(scale, fontScale, spacing, cardDimensions).slotContent}>
-                <View style={styles(scale, fontScale, spacing, cardDimensions).slotSection}>
+        <View style={[styles.card, styles.slotCard]}>
+            <View style={styles.cardOverlay} />
+            <View style={styles.slotContent}>
+                <View style={styles.slotSection}>
                     <Animated.View
                         style={[
-                            styles(scale, fontScale, spacing, cardDimensions).slotItems,
+                            styles.slotItems,
                             { transform: [{ translateY: cityTranslateY }] },
                         ]}
                     >
                         {cities.map((city, index) => (
-                            <View key={index} style={styles(scale, fontScale, spacing, cardDimensions).slotItem}>
+                            <View key={index} style={styles.slotItem}>
                                 {/*   <Image
                   source={{ uri: `https://example.com/assets/${city}.png` }}
-                  style={styles(scale, fontScale, spacing, cardDimensions).slotImage}
+                  style={styles.slotImage}
                 /> */}
                             </View>
                         ))}
                     </Animated.View>
                 </View>
 
-                <View style={styles(scale, fontScale, spacing, cardDimensions).divider} />
+                <View style={styles.divider} />
 
-                <View style={styles(scale, fontScale, spacing, cardDimensions).slotSection}>
+                <View style={styles.slotSection}>
                     <Animated.View
                         style={[
-                            styles(scale, fontScale, spacing, cardDimensions).slotItems,
+                            styles.slotItems,
                             { transform: [{ translateY: diceTranslateY }] },
                         ]}
                     >
                         {dice.map((num, index) => (
-                            <View key={index} style={styles(scale, fontScale, spacing, cardDimensions).slotItem}>
+                            <View key={index} style={styles.slotItem}>
                                 {/*   <Image
                   source={{ uri: `https://example.com/assets/Dice${num}.png` }}
-                  style={styles(scale, fontScale, spacing, cardDimensions).slotImage}
+                  style={styles.slotImage}
                 /> */}
                             </View>
                         ))}
@@ -273,20 +272,19 @@ const SlotPreviewCard: React.FC<{
             {gamePhase === "spinning" && (
                 <Animated.View
                     style={[
-                        styles(scale, fontScale, spacing, cardDimensions).shimmerOverlay,
+                        styles.shimmerOverlay,
                         { transform: [{ translateX: shimmerTranslateX }] },
                     ]}
                 />
             )}
 
-            <View style={styles(scale, fontScale, spacing, cardDimensions).statusIndicator} />
+            <View style={styles.statusIndicator} />
         </View>
     );
 };
 
 // TimerCard Component
 const TimerCard: React.FC<{ seconds: number }> = ({ seconds }) => {
-    const { scale, fontScale, spacing, cardDimensions } = useResponsiveDimensions();
     const isUrgent = seconds <= 10;
     const scaleAnim = useRef(new Animated.Value(1)).current;
     const glowAnim = useRef(new Animated.Value(1)).current;
@@ -336,18 +334,18 @@ const TimerCard: React.FC<{ seconds: number }> = ({ seconds }) => {
     return (
         <Animated.View
             style={[
-                styles(scale, fontScale, spacing, cardDimensions).card,
-                isUrgent ? styles(scale, fontScale, spacing, cardDimensions).urgentTimerCard : styles(scale, fontScale, spacing, cardDimensions).normalTimerCard,
+                styles.card,
+                isUrgent ? styles.urgentTimerCard : styles.normalTimerCard,
                 { transform: [{ scale: scaleAnim }] },
             ]}
         >
-            <View style={styles(scale, fontScale, spacing, cardDimensions).cardOverlay} />
-            <View style={styles(scale, fontScale, spacing, cardDimensions).timerContent}>
-                <Text style={styles(scale, fontScale, spacing, cardDimensions).timerLabel}>SECONDS LEFT</Text>
-                <View style={styles(scale, fontScale, spacing, cardDimensions).timerNumberContainer}>
+            <View style={styles.cardOverlay} />
+            <View style={styles.timerContent}>
+                <Text style={styles.timerLabel}>SECONDS LEFT</Text>
+                <View style={styles.timerNumberContainer}>
                     <Animated.Text
                         style={[
-                            styles(scale, fontScale, spacing, cardDimensions).timerNumber,
+                            styles.timerNumber,
                             { transform: [{ scale: glowAnim }] },
                         ]}
                     >
@@ -356,19 +354,19 @@ const TimerCard: React.FC<{ seconds: number }> = ({ seconds }) => {
                     {isUrgent && (
                         <Animated.View
                             style={[
-                                styles(scale, fontScale, spacing, cardDimensions).urgentGlow,
+                                styles.urgentGlow,
                                 { transform: [{ scale: glowAnim }] },
                             ]}
                         />
                     )}
                 </View>
-                <View style={styles(scale, fontScale, spacing, cardDimensions).timerDots}>
+                <View style={styles.timerDots}>
                     {[0, 1, 2].map((i) => (
                         <Animated.View
                             key={i}
                             style={[
-                                styles(scale, fontScale, spacing, cardDimensions).timerDot,
-                                isUrgent ? styles(scale, fontScale, spacing, cardDimensions).urgentDot : styles(scale, fontScale, spacing, cardDimensions).normalDot,
+                                styles.timerDot,
+                                isUrgent ? styles.urgentDot : styles.normalDot,
                                 { transform: [{ scale: glowAnim }] },
                             ]}
                         />
@@ -381,7 +379,6 @@ const TimerCard: React.FC<{ seconds: number }> = ({ seconds }) => {
 
 // Main Component
 const DiceWaitingPageContent: React.FC = () => {
-    const { width, height, scale, fontScale, spacing } = useResponsiveDimensions();
     const {
         onlineUsers,
         totalBet,
@@ -392,6 +389,9 @@ const DiceWaitingPageContent: React.FC = () => {
     } = useGameContext();
 
     const timerSeconds = timerStringToSeconds(timer);
+
+    const [layoutReady, setLayoutReady] = React.useState(false);
+
     const player = useVideoPlayer(
         require("../assets/Video/dicevideo.mp4"),
         (player) => {
@@ -412,11 +412,11 @@ const DiceWaitingPageContent: React.FC = () => {
     }, []);
 
     return (
-        <View style={styles(scale, fontScale, spacing, {}).container}>
-            <View style={styles(scale, fontScale, spacing, {}).backgroundOverlay} />
+        <View style={styles.container}>
+            <View style={styles.backgroundOverlay} />
 
-            <Animated.View style={[styles(scale, fontScale, spacing, {}).topSection, { opacity: fadeAnim, height: height * 0.25 }]}>
-                <View style={styles(scale, fontScale, spacing, {}).cardRow}>
+            <Animated.View style={[styles.topSection, { opacity: fadeAnim }]}>
+                <View style={styles.cardRow}>
                     <OnlineUsersCard count={onlineUsers} />
                     <BetAmountCard amount={totalBet} />
                     <SlotPreviewCard
@@ -428,15 +428,21 @@ const DiceWaitingPageContent: React.FC = () => {
                 </View>
             </Animated.View>
 
-            <Animated.View style={[styles(scale, fontScale, spacing, {}).mainSection, { opacity: fadeAnim }]}>
-                <View style={styles(scale, fontScale, spacing, {}).gameArea}>
-                    <View style={styles(scale, fontScale, spacing, {}).gameAreaOverlay} />
-                    <View style={styles(scale, fontScale, spacing, {}).videoContainer}>
-                        <VideoView
-                            player={player}
-                            style={StyleSheet.absoluteFill}
-                            contentFit="cover"
-                        />
+            <Animated.View style={[styles.mainSection, { opacity: fadeAnim }]}>
+                <View style={styles.gameArea}>
+                    <View style={styles.gameAreaOverlay} />
+                    <View
+                        style={styles.videoContainer}
+                        onLayout={() => setLayoutReady(true)}
+                    >
+                        {layoutReady && (
+                            <VideoView
+                                player={player}
+                                style={StyleSheet.absoluteFill}
+                                contentFit="cover"
+                                nativeControls={false}
+                            />
+                        )}
                     </View>
                 </View>
             </Animated.View>
@@ -444,7 +450,7 @@ const DiceWaitingPageContent: React.FC = () => {
     );
 };
 
-const styles = (scale: number, fontScale: number, spacing: any, cardDimensions: any) => StyleSheet.create({
+const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#0f0f23",
@@ -454,8 +460,9 @@ const styles = (scale: number, fontScale: number, spacing: any, cardDimensions: 
         backgroundColor: "rgba(0, 0, 0, 0.7)",
     },
     topSection: {
-        paddingHorizontal: spacing.md,
-        paddingTop: spacing.lg,
+        height: screenHeight * 0.3,
+        paddingHorizontal: 16,
+        paddingTop: 16,
     },
     statsGrid: {
         flex: 1,
@@ -474,13 +481,14 @@ const styles = (scale: number, fontScale: number, spacing: any, cardDimensions: 
     },
     mainSection: {
         flex: 1,
-        paddingHorizontal: spacing.md,
-        paddingBottom: spacing.lg,
+        paddingHorizontal: 16,
+        paddingVertical: 12,
     },
+
     gameArea: {
         flex: 1,
         backgroundColor: "rgba(255, 255, 255, 0.05)",
-        borderRadius: Math.round(32 * scale),
+        borderRadius: 32,
         borderWidth: 1,
         borderColor: "rgba(255, 255, 255, 0.1)",
         justifyContent: "center",
@@ -490,7 +498,7 @@ const styles = (scale: number, fontScale: number, spacing: any, cardDimensions: 
     gameAreaOverlay: {
         ...StyleSheet.absoluteFillObject,
         backgroundColor: "rgba(0, 0, 0, 0.2)",
-        borderRadius: Math.round(32 * scale),
+        borderRadius: 32,
     },
     gameAreaText: {
         color: "white",
@@ -500,16 +508,15 @@ const styles = (scale: number, fontScale: number, spacing: any, cardDimensions: 
     videoContainer: {
         width: "100%",
         height: "100%",
-        justifyContent: "center",
-        alignItems: "center",
-        padding: spacing.md,
-        zIndex: 2,
+        borderRadius: 28,
+        overflow: "hidden",
+        backgroundColor: "#1f2937",
     },
 
     mockVideoFrame: {
         width: "100%",
         height: "100%",
-        borderRadius: Math.round(24 * scale),
+        borderRadius: 24,
         borderWidth: 1,
         borderColor: "rgba(255,255,255,0.2)",
         backgroundColor: "#1f2937", // Dark gray background
@@ -520,18 +527,18 @@ const styles = (scale: number, fontScale: number, spacing: any, cardDimensions: 
 
     videoLabel: {
         color: "white",
-        fontSize: Math.round(18 * fontScale),
+        fontSize: 18,
         fontWeight: "600",
         opacity: 0.7,
     },
 
     card: {
-        flex: 1,
-        minWidth: cardDimensions.width,
-        maxWidth: cardDimensions.width * 1.2,
-        height: "100%",
-        marginHorizontal: spacing.xs,
-        borderRadius: Math.round(24 * scale),
+        flexBasis: "22%", // fits 4 in a row with some spacing
+        minWidth: screenWidth * 0.2,
+        maxWidth: screenWidth * 0.25,
+        height: 70, // shorter card
+        marginHorizontal: 4,
+        borderRadius: 50, // makes left & right ends circular
         borderWidth: 1,
         overflow: "hidden",
         shadowColor: "#000",
@@ -539,17 +546,19 @@ const styles = (scale: number, fontScale: number, spacing: any, cardDimensions: 
         shadowOpacity: 0.3,
         shadowRadius: 16,
         elevation: 8,
+        flexDirection: "row", // ensure horizontal layout
+        alignItems: "center",
+        justifyContent: "space-between",
+        paddingHorizontal: 12,
     },
 
     cardRow: {
         flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        paddingHorizontal: spacing.sm,
-        paddingTop: spacing.xl,
-        paddingBottom: spacing.sm,
-        gap: spacing.xs,
-        height: Math.round(90 * scale),
+        flexWrap: "wrap", // allow wrapping on small screens
+        justifyContent: "space-evenly",
+        alignItems: "stretch",
+        gap: 12,
+        height: "100%", // use full container height
     },
 
     onlineCard: {
@@ -575,82 +584,77 @@ const styles = (scale: number, fontScale: number, spacing: any, cardDimensions: 
     cardOverlay: {
         ...StyleSheet.absoluteFillObject,
         backgroundColor: "rgba(255, 255, 255, 0.1)",
-        borderRadius: Math.round(24 * scale),
+        borderRadius: 24,
     },
     cardContent: {
         flex: 1,
         flexDirection: "row",
         alignItems: "center",
-        padding: spacing.md,
+        padding: 16,
         position: "relative",
         zIndex: 1,
     },
     iconContainer: {
-        marginRight: spacing.md,
+        marginRight: 16,
         position: "relative",
     },
     userIcon: {
-        fontSize: Math.round(32 * fontScale),
-        color: "white",
+        fontSize: 24,
     },
     glowEffect: {
         ...StyleSheet.absoluteFillObject,
         backgroundColor: "rgba(34, 197, 94, 0.3)",
-        borderRadius: Math.round(20 * scale),
+        borderRadius: 20,
         opacity: 0.7,
     },
     textContainer: {
         flex: 1,
     },
     countText: {
-        fontSize: Math.round(12 * fontScale),
-        fontWeight: "900",
+        fontSize: 14,
+        fontWeight: "bold",
         color: "white",
     },
     labelText: {
-        fontSize: Math.round(14 * fontScale),
-        fontWeight: "bold",
-        color: "rgba(255, 255, 255, 0.9)",
+        fontSize: 10,
+        color: "rgba(255, 255, 255, 0.8)",
     },
 
     statusDots: {
         flexDirection: "row",
         position: "absolute",
-        top: spacing.sm,
-        right: spacing.sm,
+        top: 12,
+        right: 12,
     },
     statusDot: {
-        width: Math.round(4 * scale),
-        height: Math.round(4 * scale),
-        borderRadius: Math.round(4 * scale),
+        width: 4,
+        height: 4,
+        borderRadius: 4,
         backgroundColor: "#22c55e",
-        marginLeft: Math.round(4 * scale),
+        marginLeft: 4,
         shadowColor: "#22c55e",
         shadowOpacity: 0.8,
         shadowRadius: 4,
         elevation: 4,
     },
     coinContainer: {
-        width: Math.round(80 * scale),
-        height: Math.round(80 * scale),
-        justifyContent: "center",
-        alignItems: "center",
-        position: "relative",
+        width: 50,
+        height: 50,
     },
     coinImage: {
-        width: Math.round(60 * scale),
-        height: Math.round(60 * scale),
-        borderRadius: Math.round(30 * scale),
+        width: 60,
+        height: 60,
+        borderRadius: 30,
     },
     coinGlow: {
         ...StyleSheet.absoluteFillObject,
         backgroundColor: "rgba(168, 85, 247, 0.3)",
-        borderRadius: Math.round(40 * scale),
+        borderRadius: 40,
         opacity: 1,
     },
     betText: {
         flex: 1,
-        fontSize: Math.round(14 * fontScale),
+        fontSize: 14,
         fontWeight: "bold",
         color: "white",
         textAlign: "center",
@@ -660,11 +664,11 @@ const styles = (scale: number, fontScale: number, spacing: any, cardDimensions: 
     },
     statusIndicator: {
         position: "absolute",
-        top: spacing.sm,
-        right: spacing.sm,
-        width: Math.round(10 * scale),
-        height: Math.round(10 * scale),
-        borderRadius: Math.round(5 * scale),
+        top: 12,
+        right: 12,
+        width: 10,
+        height: 10,
+        borderRadius: 5,
         backgroundColor: "#22c55e",
         shadowColor: "#22c55e",
         shadowOpacity: 0.8,
@@ -686,22 +690,22 @@ const styles = (scale: number, fontScale: number, spacing: any, cardDimensions: 
         alignItems: "center",
     },
     slotItem: {
-        height: Math.round(60 * scale),
+        height: 60,
         width: "100%",
         justifyContent: "center",
         alignItems: "center",
     },
     slotImage: {
-        width: Math.round(50 * scale),
-        height: Math.round(50 * scale),
-        borderRadius: Math.round(8 * scale),
+        width: 50,
+        height: 50,
+        borderRadius: 8,
     },
     divider: {
-        width: Math.round(4 * scale),
+        width: 4,
         height: "60%",
         backgroundColor: "#ec4899",
         borderRadius: 2,
-        marginHorizontal: spacing.sm,
+        marginHorizontal: 8,
         shadowColor: "#ec4899",
         shadowOpacity: 0.8,
         shadowRadius: 6,
@@ -710,17 +714,17 @@ const styles = (scale: number, fontScale: number, spacing: any, cardDimensions: 
     shimmerOverlay: {
         ...StyleSheet.absoluteFillObject,
         backgroundColor: "rgba(255, 255, 255, 0.2)",
-        borderRadius: Math.round(24 * scale),
+        borderRadius: 24,
     },
     timerContent: {
         flex: 1,
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        paddingHorizontal: spacing.lg,
+        paddingHorizontal: 20,
     },
     timerLabel: {
-        fontSize: Math.round(16 * fontScale),
+        fontSize: 16,
         fontWeight: "900",
         color: "white",
         textTransform: "uppercase",
@@ -735,7 +739,7 @@ const styles = (scale: number, fontScale: number, spacing: any, cardDimensions: 
         justifyContent: "center",
     },
     timerNumber: {
-        fontSize: Math.round(40 * fontScale),
+        fontSize: 40,
         fontWeight: "900",
         color: "white",
         textShadowColor: "rgba(0, 0, 0, 0.8)",
@@ -745,17 +749,17 @@ const styles = (scale: number, fontScale: number, spacing: any, cardDimensions: 
     urgentGlow: {
         ...StyleSheet.absoluteFillObject,
         backgroundColor: "rgba(251, 191, 36, 0.5)",
-        borderRadius: Math.round(30 * scale),
+        borderRadius: 30,
         opacity: 0.8,
     },
     timerDots: {
         flexDirection: "row",
     },
     timerDot: {
-        width: Math.round(10 * scale),
-        height: Math.round(10 * scale),
-        borderRadius: Math.round(5 * scale),
-        marginLeft: Math.round(4 * scale),
+        width: 10,
+        height: 10,
+        borderRadius: 5,
+        marginLeft: 4,
         shadowOpacity: 0.8,
         shadowRadius: 6,
         elevation: 4,
